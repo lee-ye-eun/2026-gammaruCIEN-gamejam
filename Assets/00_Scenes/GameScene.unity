@@ -1098,6 +1098,9 @@ MonoBehaviour:
   customers:
   - {fileID: 11400000, guid: 043014ebb3cf84d10b9370647720ac5d, type: 2}
   - {fileID: 11400000, guid: 08cb62037f4a3409781203e07e26c9ca, type: 2}
+  - {fileID: 11400000, guid: 7a66e4a5065b0bc43857933fd9aebbbb, type: 2}
+  - {fileID: 11400000, guid: 5d96b1a2a051ff849aff527201d32221, type: 2}
+  - {fileID: 11400000, guid: d7941134572dedd4c92618fe058a670c, type: 2}
   dialoguePanel: {fileID: 775061171}
   dialogueManager: {fileID: 775061173}
   clueFindingPanel: {fileID: 1247184030}
