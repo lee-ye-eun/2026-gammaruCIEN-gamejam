@@ -14,14 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomerData
   customerName: "\uC190\uB2D81"
   portrait: {fileID: 0}
-  worryText: "\u201C\uC694\uC998 \uB0A8\uC790\uCE5C\uAD6C\uAC00 \uC800\uD55C\uD14C
-    \uBB54\uAC00 \uC228\uAE30\uB294 \uAC83 \uAC19\uC544\uC694.\u201D"
-  baseClues: []
-  questions: []
+  dialogueCsv: {fileID: 4900000, guid: 6af0c2bc894cb4b999d0e78be10ff050, type: 3}
   causeCard: {fileID: 11400000, guid: db0fc53dd478a4f5ab0c23c6b314ad45, type: 2}
   presentCard: {fileID: 11400000, guid: 552e233c27ba8448088038b68babb595, type: 2}
   adviceCard: {fileID: 11400000, guid: 47e9bbcbcb2f645048ac3670f97440c4, type: 2}
-  reaction0: "\u201C\uC74C\u2026\u2026 \uADF8\uB7F0\uAC00\uC694?\u201D"
-  reaction1: "\uC74C"
-  reaction2: "\uB9DE\uC544\uC694"
-  reaction3: "\u201C\u2026\u2026\uC18C\uB984 \uB3CB\uC558\uC5B4\uC694. \uB531 \uB9DE\uC544\uC694.\u201D"
