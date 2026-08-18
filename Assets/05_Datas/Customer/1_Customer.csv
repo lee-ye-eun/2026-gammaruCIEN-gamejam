@@ -1,0 +1,18 @@
+key,value
+worryText,남자친구가 뭔가 숨기는 것 같아요.
+clue1,왼손 약지에 오래된 커플링.
+clue2,핸드폰 잠금화면. 남자친구와 커플사진 + ‘내생일 Dday-2’
+clue3,꽃다발. 꽂혀 있는 메모 : ‘사랑해’
+clue4,
+question1,남자친구의 행동이 언제부터 달라졌나요?
+question1_clue,일주일 정도 됐어요.
+question2, 곧 특별한 날이 있나요? 
+question2_clue,이틀 뒤가 제 생일이에요.
+question3,직접 물어봤나요? 
+question3_clue,네. 조금만 기다려달라고 하더라고요.
+question4,누구에게 받은 꽃다발인가요? 
+question4_clue,남자친구요. 종종 선물해줘요.
+reaction0,음…… 그런가요?
+reaction1,음
+reaction2,맞아요
+reaction3,……소름 돋았어요. 딱 맞아요.
