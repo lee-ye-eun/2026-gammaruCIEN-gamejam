@@ -1,89 +1,330 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 카드 덱 화면의 매니저 역할을 겸함: 카드 선택 상태(최대 3장)와 다음 버튼 활성화 관리.
-// 카드 수집/펼치기는 CardCollector가 담당. 다음 버튼은 인스펙터에서 이 컴포넌트의 ConfirmSelection()을 참조하도록 연결한다.
+// CardDeckPanel 안에서만 카드 드로우, 슬롯 드래그 선택, 제출 연출을 담당한다.
 public class CardDeck : MonoBehaviour
 {
+    private const int DeckCardCount = 6;
     private const int MaxSelectable = 3;
 
-    [Header("카드 수집/펼치기 담당")]
+    [Header("카드 수집/드로우")]
     [SerializeField] private CardCollector cardCollector;
+    [SerializeField] private RectTransform cardContainer;
+    [SerializeField] private RectTransform dragLayer;
+    [SerializeField] private RectTransform stackPoint;
+    [SerializeField] private GameObject stackVisual;
+    [SerializeField] private Button drawButton;
+
+    [Header("선택 슬롯")]
+    [SerializeField] private CardSelectionSlot[] selectionSlots = new CardSelectionSlot[MaxSelectable];
 
     [Header("3장 선택 완료 시 활성화할 버튼")]
     [SerializeField] private Button nextButton;
 
-    private readonly List<CardView> selectedCards = new List<CardView>();
+    [Header("연출")]
+    [SerializeField] private float drawDuration = 0.22f;
+    [SerializeField] private float drawInterval = 0.04f;
+    [SerializeField] private float flipDuration = 0.26f;
 
-    public IReadOnlyList<CardView> SelectedCards => selectedCards;
+    private readonly List<CardView> cards = new List<CardView>();
+    private Canvas parentCanvas;
+    private bool cardsDrawn;
+    private bool isResolving;
+
+    public IReadOnlyList<CardView> SelectedCards => selectionSlots
+        .Where(slot => slot != null && slot.CurrentCard != null)
+        .Select(slot => slot.CurrentCard)
+        .ToList();
+
+    public RectTransform DragLayer => dragLayer != null ? dragLayer : (RectTransform)transform;
+    public Camera UICamera => parentCanvas != null && parentCanvas.renderMode != RenderMode.ScreenSpaceOverlay
+        ? parentCanvas.worldCamera
+        : null;
+    public bool CanInteractWithCards => cardsDrawn && !isResolving;
 
     private void Awake()
     {
-        if (cardCollector != null)
-        {
-            cardCollector.CollectCards();
+        parentCanvas = GetComponentInParent<Canvas>();
+        SetupSlots();
+        SetupCards();
 
-            foreach (var card in cardCollector.Cards)
-            {
-                if (card != null) card.OnClicked += HandleCardClicked;
-            }
-        }
+        if (drawButton != null) drawButton.onClick.AddListener(DrawCards);
+        if (nextButton != null) nextButton.onClick.AddListener(ConfirmSelection);
 
-        if (nextButton != null) nextButton.interactable = false;
-    }
-
-    // 손님이 바뀔 때마다(카드 덱 패널이 다시 열릴 때마다) GameManager가 호출: 이전 선택 초기화 + 카드 다시 펼치기
-    public void PrepareForNewRound()
-    {
-        ResetSelection();
-        if (cardCollector != null) cardCollector.SpreadCards();
+        UpdateNextButton();
     }
 
     private void OnDestroy()
     {
-        if (cardCollector != null)
+        if (drawButton != null) drawButton.onClick.RemoveListener(DrawCards);
+        if (nextButton != null) nextButton.onClick.RemoveListener(ConfirmSelection);
+
+        foreach (var card in cards)
         {
-            foreach (var card in cardCollector.Cards)
-            {
-                if (card != null) card.OnClicked -= HandleCardClicked;
-            }
+            if (card != null) card.OnClicked -= HandleCardClicked;
         }
     }
 
-    // 3장 선택 완료 시 활성화되는 다음 버튼 onClick에 연결 -> 결과 대사로 전환
-    public void ConfirmSelection()
+    // 손님이 바뀔 때마다 GameManager가 호출한다.
+    public void PrepareForNewRound()
     {
-        if (selectedCards.Count != MaxSelectable) return;
-        if (GameManager.Instance != null) GameManager.Instance.ChangeState(GameManager.GameState.ShowingCardResult);
+        StopAllCoroutines();
+        isResolving = false;
+        cardsDrawn = false;
+
+        SetupSlots();
+        SetupCards();
+        ResetSelection();
+
+        Vector2 pilePosition = stackPoint != null ? stackPoint.anchoredPosition : Vector2.zero;
+        foreach (var card in cards)
+        {
+            if (card == null) continue;
+
+            card.PrepareForDraw(pilePosition);
+            card.gameObject.SetActive(false);
+        }
+
+        if (stackVisual != null) stackVisual.SetActive(true);
+        if (drawButton != null)
+        {
+            drawButton.gameObject.SetActive(true);
+            drawButton.interactable = cards.Count > 0;
+        }
+
+        UpdateNextButton();
     }
 
-    private void HandleCardClicked(CardView card)
+    public void DrawCards()
     {
-        if (selectedCards.Contains(card))
-        {
-            selectedCards.Remove(card);
-            card.SetSelected(false);
-        }
-        else
-        {
-            if (selectedCards.Count >= MaxSelectable) return; // 3장 초과 선택 억제
+        if (cardsDrawn || isResolving || cards.Count == 0) return;
 
-            selectedCards.Add(card);
-            card.SetSelected(true);
+        StartCoroutine(DrawCardsRoutine());
+    }
+
+    public bool PlaceCardInSlot(CardView card, CardSelectionSlot targetSlot)
+    {
+        if (card == null || targetSlot == null || !CanInteractWithCards) return false;
+
+        CardSelectionSlot previousSlot = card.CurrentSlot;
+        CardView previousCard = targetSlot.CurrentCard;
+
+        if (previousCard == card) return true;
+
+        if (previousSlot != null)
+        {
+            previousSlot.ClearCard(card);
         }
 
-        if (nextButton != null) nextButton.interactable = selectedCards.Count == MaxSelectable;
+        if (previousCard != null)
+        {
+            previousCard.ReturnToDeckHome();
+        }
+
+        targetSlot.SetCard(card);
+        card.MoveToSlot(targetSlot);
+        UpdateNextButton();
+        return true;
+    }
+
+    public void ReturnCardToDeck(CardView card)
+    {
+        if (card == null) return;
+
+        CardSelectionSlot slot = card.CurrentSlot;
+        if (slot != null)
+        {
+            slot.ClearCard(card);
+        }
+
+        card.ReturnToDeckHome();
+        UpdateNextButton();
     }
 
     public void ResetSelection()
     {
-        foreach (var card in selectedCards)
+        foreach (var slot in selectionSlots)
         {
-            card.SetSelected(false);
-        }
-        selectedCards.Clear();
+            if (slot == null) continue;
 
-        if (nextButton != null) nextButton.interactable = false;
+            CardView card = slot.CurrentCard;
+            if (card != null)
+            {
+                card.ReturnToDeckHome(false);
+            }
+
+            slot.ClearCard();
+        }
+
+        foreach (var card in cards)
+        {
+            if (card == null) continue;
+
+            card.ReturnToDeckHome(false);
+        }
+
+        UpdateNextButton();
+    }
+
+    // 선택 결정 버튼 onClick에 연결된다. 원인-현재-조언 순서로 카드를 뒤집은 뒤 기존 결과 상태로 넘긴다.
+    public void ConfirmSelection()
+    {
+        if (SelectedCards.Count != MaxSelectable || isResolving) return;
+
+        StartCoroutine(ConfirmSelectionRoutine());
+    }
+
+    public int CountCorrectSlots(CustomerData customer)
+    {
+        if (customer == null || selectionSlots.Length < MaxSelectable) return 0;
+
+        int count = 0;
+        if (IsSlotMatching(0, customer.causeCard)) count++;
+        if (IsSlotMatching(1, customer.presentCard)) count++;
+        if (IsSlotMatching(2, customer.adviceCard)) count++;
+        return count;
+    }
+
+    private IEnumerator DrawCardsRoutine()
+    {
+        cardsDrawn = true;
+        UpdateNextButton();
+
+        if (drawButton != null) drawButton.interactable = false;
+        if (stackVisual != null) stackVisual.SetActive(false);
+
+        Vector2 pilePosition = stackPoint != null ? stackPoint.anchoredPosition : Vector2.zero;
+
+        foreach (var card in cards)
+        {
+            if (card == null) continue;
+
+            card.PrepareForDraw(pilePosition);
+            StartCoroutine(card.MoveHomeFromCurrentPosition(drawDuration));
+            yield return new WaitForSeconds(drawInterval);
+        }
+
+        yield return new WaitForSeconds(drawDuration);
+
+        if (drawButton != null) drawButton.gameObject.SetActive(false);
+    }
+
+    private IEnumerator ConfirmSelectionRoutine()
+    {
+        isResolving = true;
+        UpdateNextButton();
+
+        foreach (var card in SelectedCards)
+        {
+            if (card == null) continue;
+
+            yield return card.FlipFaceUp(flipDuration);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return new WaitForSeconds(0.25f);
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ChangeState(GameManager.GameState.ShowingCardResult);
+        }
+    }
+
+    private void HandleCardClicked(CardView card)
+    {
+        if (card == null || isResolving) return;
+
+        if (card.CurrentSlot != null)
+        {
+            ReturnCardToDeck(card);
+        }
+    }
+
+    private void SetupSlots()
+    {
+        if (selectionSlots == null) selectionSlots = new CardSelectionSlot[MaxSelectable];
+
+        for (int i = 0; i < selectionSlots.Length; i++)
+        {
+            if (selectionSlots[i] == null) continue;
+
+            selectionSlots[i].Initialize(this, IndexToSlotRole(i));
+        }
+    }
+
+    private void SetupCards()
+    {
+        foreach (var card in cards)
+        {
+            if (card != null) card.OnClicked -= HandleCardClicked;
+        }
+
+        cards.Clear();
+
+        if (cardCollector != null)
+        {
+            cardCollector.CollectCards();
+            cards.AddRange(cardCollector.Cards);
+        }
+
+        if (cards.Count == 0)
+        {
+            RectTransform searchRoot = cardContainer != null ? cardContainer : (RectTransform)transform;
+            cards.AddRange(searchRoot.GetComponentsInChildren<CardView>(true));
+        }
+
+        List<CardView> uniqueCards = cards
+            .Where(card => card != null)
+            .Distinct()
+            .Take(DeckCardCount)
+            .ToList();
+
+        cards.Clear();
+        cards.AddRange(uniqueCards);
+
+        if (cardContainer != null) LayoutRebuilder.ForceRebuildLayoutImmediate(cardContainer);
+
+        foreach (var card in cards)
+        {
+            if (card == null) continue;
+
+            card.RegisterDeck(this);
+            card.SetSelected(false);
+            card.SetFaceUp(false, true);
+            card.OnClicked += HandleCardClicked;
+        }
+    }
+
+    private void UpdateNextButton()
+    {
+        if (nextButton == null) return;
+
+        nextButton.interactable = cardsDrawn && !isResolving && SelectedCards.Count == MaxSelectable;
+    }
+
+    private bool IsSlotMatching(int index, CardData answer)
+    {
+        if (answer == null || index < 0 || index >= selectionSlots.Length) return false;
+
+        CardView card = selectionSlots[index] != null ? selectionSlots[index].CurrentCard : null;
+        return card != null && card.Data == answer;
+    }
+
+    private static CardSlotRole IndexToSlotRole(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return CardSlotRole.Cause;
+            case 1:
+                return CardSlotRole.Present;
+            case 2:
+                return CardSlotRole.Advice;
+            default:
+                return CardSlotRole.Cause;
+        }
     }
 }
