@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 216e39c9b7f9e478a8b7daf3f7d128a7, type: 3}
+  m_Name: CrushStudentCustomer
+  m_EditorClassIdentifier: Assembly-CSharp::CustomerData
+  customerId: CrushStudent
+  customerName: CrushStudentCustomer
+  ageGroup: "10\uB300"
+  gender: "\uB0A8\uC790"
+  appearanceDescription: "\uAD50\uBCF5\uC744 \uC785\uC740 \uD559\uC0DD. \uCB48\uBF1B\uCB48\uBF1B\uD558\uACE0
+    \uC5B4\uB518\uAC00 \uC090\uB531\uD558\uAC8C \uD5C8\uC138\uB97C \uBD80\uB9AC\uC9C0\uB9CC
+    \uC798\uC0DD\uAE34 \uC778\uC0C1."
+  situationDescription: "\uAC19\uC740 \uBC18 \uCE5C\uAD6C\uB97C \uC9DD\uC0AC\uB791
+    \uC911\uC774\uB2E4. \uB2E4\uB978 \uC0AC\uB78C\uC774 \uADF8 \uCE5C\uAD6C\uC5D0\uAC8C
+    \uACE0\uBC31\uD588\uB2E4\uB294 \uC18C\uC2DD\uC744 \uB4E3\uACE0 \uB9C8\uC74C\uC774
+    \uAE09\uD574\uC84C\uC9C0\uB9CC \uC544\uC9C1 \uC778\uC0AC \uC815\uB3C4\uB9CC \uD558\uB294
+    \uC0AC\uC774\uC774\uBBC0\uB85C \uC131\uAE09\uD558\uAC8C \uACE0\uBC31\uD558\uC9C0
+    \uC54A\uC544\uC57C \uD55C\uB2E4."
+  portrait: {fileID: 0}
+  dialogueCsv: {fileID: 4900000, guid: ff11d2e990bad6f41b193f470683f25f, type: 3}
+  causeCard: {fileID: 11400000, guid: 552e233c27ba8448088038b68babb595, type: 2}
+  presentCard: {fileID: 11400000, guid: be672a521513049a9a29d6fa0bd7b42b, type: 2}
+  adviceCard: {fileID: 11400000, guid: 64ee44da0823e4776a68fe02959aba57, type: 2}

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baa2f717077c64cff8d6ca15fc6614a1, type: 3}
+  m_Name: DevilCard
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardId: Devil
+  cardName: "\uC545\uB9C8"
+  symbol: {fileID: 0}
+  keywords:
+  - "\uC9D1\uCC29"
+  description: 
+  causeMeaning: "\uBB34\uC5B8\uAC00\uB97C \uB193\uC9C0 \uBABB\uD55C \uC9D1\uCC29\uC774
+    \uBB38\uC81C\uC758 \uC2DC\uC791\uC778 \uAC83 \uAC19\uC2B5\uB2C8\uB2E4."
+  presentMeaning: "\uC9C0\uAE08\uC740 \uC9C0\uB098\uCE58\uAC8C \uB9E4\uB2EC\uB9AC\uACE0
+    \uC788\uC2B5\uB2C8\uB2E4."
+  adviceMeaning: "\uC815\uB9D0 \uC6D0\uD558\uB294 \uAC83\uC774\uB77C\uBA74 \uC27D\uAC8C
+    \uD3EC\uAE30\uD558\uC9C0 \uB9C8\uC138\uC694."

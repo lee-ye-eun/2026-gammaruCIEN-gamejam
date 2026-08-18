@@ -4,6 +4,7 @@ using UnityEngine;
 public class CardData : ScriptableObject
 {
     [Header("기본 정보")]
+    public string cardId;
     public string cardName;      // 예: "달"
     public Sprite symbol;        // 카드 문양 아트
 
@@ -13,4 +14,12 @@ public class CardData : ScriptableObject
     [Header("설명 (선택)")]
     [TextArea]
     public string description;
+
+    [Header("위치별 해석")]
+    [TextArea]
+    public string causeMeaning;
+    [TextArea]
+    public string presentMeaning;
+    [TextArea]
+    public string adviceMeaning;
 }

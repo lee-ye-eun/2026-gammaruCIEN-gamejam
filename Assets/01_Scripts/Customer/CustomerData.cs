@@ -4,7 +4,14 @@ using UnityEngine;
 public class CustomerData : ScriptableObject
 {
     [Header("기본 정보")]
+    public string customerId;
     public string customerName;
+    public string ageGroup;
+    public string gender;
+    [TextArea]
+    public string appearanceDescription;
+    [TextArea]
+    public string situationDescription;
     public Sprite portrait;
 
     [Header("대사 CSV (key,value 행: worryText / clue1~4 / question1~4,question1~4_clue / reaction0~3)")]

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baa2f717077c64cff8d6ca15fc6614a1, type: 3}
+  m_Name: TowerCard
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardId: Tower
+  cardName: "\uD0D1"
+  symbol: {fileID: 0}
+  keywords:
+  - "\uAC08\uB4F1"
+  description: 
+  causeMeaning: "\uD06C\uACE0 \uC791\uC740 \uCDA9\uB3CC\uC774 \uC774 \uC0C1\uD669\uC744
+    \uB9CC\uB4E4\uC5C8\uC2B5\uB2C8\uB2E4."
+  presentMeaning: "\uC9C0\uAE08\uC740 \uAC08\uB4F1\uC744 \uD53C\uD558\uAE30 \uC5B4\uB824\uC6B4
+    \uC0C1\uD669\uC785\uB2C8\uB2E4."
+  adviceMeaning: "\uD544\uC694\uD55C \uCDA9\uB3CC\uC774\uB77C\uBA74 \uD53C\uD558\uC9C0
+    \uB9D0\uACE0 \uACB0\uB2E8\uC744 \uB0B4\uB824\uBCF4\uC138\uC694."

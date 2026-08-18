@@ -10,11 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 216e39c9b7f9e478a8b7daf3f7d128a7, type: 3}
-  m_Name: 0_Customer
+  m_Name: BirthdayGirlfriendCustomer
   m_EditorClassIdentifier: Assembly-CSharp::CustomerData
-  customerName: "\uC190\uB2D81"
+  customerId: BirthdayGirlfriend
+  customerName: BirthdayGirlfriendCustomer
+  ageGroup: "20\uB300"
+  gender: "\uC5EC\uC790"
+  appearanceDescription: "\uAE34 \uC0DD\uBA38\uB9AC. \uD558\uB298\uD558\uB298\uD558\uACE0
+    \uC5EC\uB9AC\uC5EC\uB9AC\uD55C \uC6D0\uD53C\uC2A4. \uCCAD\uC21C\uD55C \uC778\uC0C1."
+  situationDescription: "\uB0A8\uC790\uCE5C\uAD6C\uAC00 \uC0DD\uC77C \uC11C\uD504\uB77C\uC774\uC988\uB97C
+    \uC900\uBE44\uD558\uACE0 \uC788\uB2E4. \uAE30\uB2E4\uB9AC\uBA74 \uD574\uACB0\uB41C\uB2E4."
   portrait: {fileID: 0}
   dialogueCsv: {fileID: 4900000, guid: 6af0c2bc894cb4b999d0e78be10ff050, type: 3}
   causeCard: {fileID: 11400000, guid: db0fc53dd478a4f5ab0c23c6b314ad45, type: 2}
   presentCard: {fileID: 11400000, guid: 552e233c27ba8448088038b68babb595, type: 2}
-  adviceCard: {fileID: 11400000, guid: 47e9bbcbcb2f645048ac3670f97440c4, type: 2}
+  adviceCard: {fileID: 11400000, guid: 64ee44da0823e4776a68fe02959aba57, type: 2}

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baa2f717077c64cff8d6ca15fc6614a1, type: 3}
+  m_Name: SunCard
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  cardId: Sun
+  cardName: "\uD0DC\uC591"
+  symbol: {fileID: 0}
+  keywords:
+  - "\uC194\uC9C1"
+  description: 
+  causeMeaning: "\uC194\uC9C1\uD558\uC9C0 \uBABB\uD588\uB358 \uAC83\uC774 \uBB38\uC81C\uC758
+    \uC2DC\uC791\uC778 \uAC83 \uAC19\uC2B5\uB2C8\uB2E4."
+  presentMeaning: "\uC774\uC81C \uAC10\uCDB0\uC84C\uB358 \uB9C8\uC74C\uC774\uB098
+    \uC0AC\uC2E4\uC774 \uB4DC\uB7EC\uB098\uACE0 \uC788\uC2B5\uB2C8\uB2E4."
+  adviceMeaning: "\uD53C\uD558\uC9C0 \uB9D0\uACE0 \uC194\uC9C1\uD558\uAC8C \uC774\uC57C\uAE30\uD574\uBCF4\uC138\uC694."
