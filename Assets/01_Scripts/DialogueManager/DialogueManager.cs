@@ -33,7 +33,7 @@ public class DialogueManager : MonoBehaviour
     // 손님 데이터에 지정된 고민 대사를 출력
     public void ShowDialogue(CustomerData customer)
     {
-        ShowDialogue(customer != null ? customer.worryText : string.Empty);
+        ShowDialogue(customer != null ? customer.Dialogue.worryText : string.Empty);
     }
 
     private void AdvanceDialogue()
