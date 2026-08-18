@@ -24,6 +24,16 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private Button button;
     [SerializeField] private GameObject selectedIndicator; // 선택 시 켜지는 테두리/체크 표시 (선택)
 
+    [Header("거울 앞면 미리보기")]
+    [SerializeField] private GameObject frontPreviewRoot;
+    [SerializeField] private RectTransform frontPreviewCard;
+    [SerializeField] private Image previewSymbolImage;
+    [SerializeField] private TMP_Text previewNameText;
+    [SerializeField] private TMP_Text previewKeywordText;
+    [SerializeField] private float frontPreviewCollapsedY = 100f;
+    [SerializeField] private float frontPreviewExpandedY = 0f;
+    [SerializeField] private float frontPreviewSlideDuration = 0.16f;
+
     [Header("연출")]
     [SerializeField] private Color backColor = new Color32(93, 25, 49, 255);
     [SerializeField] private Color frontColor = new Color32(248, 246, 238, 255);
@@ -46,6 +56,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private Vector2 homeSizeDelta;
     private bool isDragging;
     private bool ignoreNextClick;
+    private Coroutine frontPreviewRoutine;
 
     private void Awake()
     {
@@ -69,6 +80,18 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         EnsureReferences();
         if (data != null) Refresh();
+        UpdateFrontPreviewState(instant: true);
+    }
+
+    private void OnDisable()
+    {
+        if (frontPreviewRoutine != null)
+        {
+            StopCoroutine(frontPreviewRoutine);
+            frontPreviewRoutine = null;
+        }
+
+        isDragging = false;
     }
 
     public void SetData(CardData newData)
@@ -130,6 +153,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         CurrentSlot = slot;
         SetSelected(true);
         SetSlotRole(slot.DisplayName);
+        UpdateFrontPreviewState(instant: true);
 
         Transform slotTransform = slot.transform;
         transform.SetParent(slotTransform, false);
@@ -161,6 +185,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         rectTransform.localScale = Vector3.one;
 
         if (!keepFaceState) SetFaceUp(false, instant: true);
+        else UpdateFrontPreviewState(instant: true);
     }
 
     public void SetFaceUp(bool faceUp, bool instant = true)
@@ -171,6 +196,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (frontRoot != null) frontRoot.SetActive(faceUp);
         if (backRoot != null) backRoot.SetActive(!faceUp);
         if (cardBodyImage != null) cardBodyImage.color = faceUp ? frontColor : backColor;
+        UpdateFrontPreviewState(instant);
 
         if (instant) rectTransform.localScale = Vector3.one;
     }
@@ -209,7 +235,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (!CanInteractInDeck()) return;
 
         rectTransform.localScale = Vector3.one * hoverScale;
-        rectTransform.anchoredPosition = homeAnchoredPosition + hoverOffset;
+        ShowFrontPreview(expanded: true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -218,6 +244,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         rectTransform.localScale = Vector3.one;
         rectTransform.anchoredPosition = homeAnchoredPosition;
+        ShowFrontPreview(expanded: false);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -226,6 +253,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         isDragging = true;
         ignoreNextClick = true;
+        UpdateFrontPreviewState(instant: true);
         canvasGroup.blocksRaycasts = false;
         transform.SetParent(ownerDeck.DragLayer, true);
         transform.SetAsLastSibling();
@@ -277,6 +305,51 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         ignoreNextClick = false;
     }
 
+    private void ShowFrontPreview(bool expanded)
+    {
+        if (!ShouldShowFrontPreview() || frontPreviewCard == null) return;
+
+        if (frontPreviewRoutine != null) StopCoroutine(frontPreviewRoutine);
+        frontPreviewRoot.SetActive(true);
+        frontPreviewRoutine = StartCoroutine(AnimateFrontPreview(expanded ? frontPreviewExpandedY : frontPreviewCollapsedY));
+    }
+
+    private IEnumerator AnimateFrontPreview(float targetY)
+    {
+        Vector2 start = frontPreviewCard.anchoredPosition;
+        Vector2 target = new Vector2(start.x, targetY);
+        float elapsed = 0f;
+
+        while (elapsed < frontPreviewSlideDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / frontPreviewSlideDuration));
+            frontPreviewCard.anchoredPosition = Vector2.LerpUnclamped(start, target, t);
+            yield return null;
+        }
+
+        frontPreviewCard.anchoredPosition = target;
+        frontPreviewRoutine = null;
+    }
+
+    private void UpdateFrontPreviewState(bool instant)
+    {
+        if (frontPreviewRoot == null) return;
+
+        bool shouldShow = ShouldShowFrontPreview();
+        frontPreviewRoot.SetActive(shouldShow);
+
+        if (instant && frontPreviewCard != null)
+        {
+            frontPreviewCard.anchoredPosition = new Vector2(frontPreviewCard.anchoredPosition.x, frontPreviewCollapsedY);
+        }
+    }
+
+    private bool ShouldShowFrontPreview()
+    {
+        return frontPreviewRoot != null && !IsFaceUp && CurrentSlot == null && !isDragging;
+    }
+
     private void SetSlotRole(string role)
     {
         if (slotRoleText == null) return;
@@ -300,11 +373,19 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     private void Refresh()
     {
-        if (symbolImage != null) symbolImage.sprite = data.symbol;
-        if (nameText != null) nameText.text = data.cardName;
-        if (keywordText != null)
+        ApplyDataToFace(symbolImage, nameText, keywordText);
+        ApplyDataToFace(previewSymbolImage, previewNameText, previewKeywordText);
+    }
+
+    private void ApplyDataToFace(Image targetSymbolImage, TMP_Text targetNameText, TMP_Text targetKeywordText)
+    {
+        if (targetSymbolImage != null) targetSymbolImage.sprite = data != null ? data.symbol : null;
+        if (targetNameText != null) targetNameText.text = data != null ? data.cardName : string.Empty;
+        if (targetKeywordText != null)
         {
-            keywordText.text = data.keywords != null ? string.Join(" / ", data.keywords) : string.Empty;
+            targetKeywordText.text = data != null && data.keywords != null
+                ? string.Join(" / ", data.keywords)
+                : string.Empty;
         }
     }
 }

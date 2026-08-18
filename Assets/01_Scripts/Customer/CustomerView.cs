@@ -11,6 +11,9 @@ public class CustomerView : MonoBehaviour
     [Header("UI 참조")]
     [SerializeField] private Image portraitImage;
 
+    [Header("임시 표시")]
+    [SerializeField] private GameObject fallbackRoot;
+
     public CustomerData Data => data;
 
     private void OnEnable()
@@ -26,6 +29,15 @@ public class CustomerView : MonoBehaviour
 
     private void Refresh()
     {
-        if (portraitImage != null) portraitImage.sprite = data.portrait;
+        Sprite portrait = data != null ? data.portrait : null;
+
+        if (portraitImage != null)
+        {
+            portraitImage.sprite = portrait;
+            portraitImage.enabled = portrait != null;
+            if (portrait != null) portraitImage.color = Color.white;
+        }
+
+        if (fallbackRoot != null) fallbackRoot.SetActive(portrait == null);
     }
 }
