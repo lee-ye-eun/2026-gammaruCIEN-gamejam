@@ -180,11 +180,7 @@ public class CardDeck : MonoBehaviour
         if (card.CurrentSlot != null)
         {
             ReturnCardToDeck(card);
-            return;
         }
-
-        CardSelectionSlot emptySlot = selectionSlots.FirstOrDefault(slot => slot != null && slot.CurrentCard == null);
-        if (emptySlot != null) PlaceCardInSlot(card, emptySlot);
     }
 
     private IEnumerator DrawCardsRoutine()
