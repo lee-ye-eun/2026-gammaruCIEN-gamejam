@@ -3,10 +3,10 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
 
+// 대사 텍스트 출력 + 화면 터치 감지만 담당. 대화창 패널의 활성 상태는 GameManager가 관리.
 public class DialogueManager : MonoBehaviour
 {
-    [Header("대화창 UI")]
-    [SerializeField] private GameObject dialoguePanel;
+    [Header("대화 텍스트")]
     [SerializeField] private TMP_Text dialogueText;
 
     // 대사가 표시된 상태에서 화면을 클릭/터치하면 발행됨
@@ -23,18 +23,17 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    // 손님 데이터에 지정된 고민 대사를 대화창에 출력
-    public void ShowDialogue(CustomerData customer)
+    // 임의의 대사 한 줄을 출력하고 터치 감지를 시작한다 (손님 관찰 대사, 카드 결과 대사 등 공용)
+    public void ShowDialogue(string text)
     {
-        if (dialoguePanel != null) dialoguePanel.SetActive(true);
-        if (dialogueText != null && customer != null) dialogueText.text = customer.worryText;
+        if (dialogueText != null) dialogueText.text = text;
         isDialogueActive = true;
     }
 
-    public void HideDialogue()
+    // 손님 데이터에 지정된 고민 대사를 출력
+    public void ShowDialogue(CustomerData customer)
     {
-        isDialogueActive = false;
-        if (dialoguePanel != null) dialoguePanel.SetActive(false);
+        ShowDialogue(customer != null ? customer.worryText : string.Empty);
     }
 
     private void AdvanceDialogue()

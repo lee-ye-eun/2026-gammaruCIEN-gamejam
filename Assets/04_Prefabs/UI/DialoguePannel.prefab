@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8482767099368116074}
   - component: {fileID: 1556093201087835073}
   m_Layer: 5
-  m_Name: Text
+  m_Name: BackImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -302,5 +302,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfd2cf0fe4cd347878acd31e444ff18a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueManager
-  dialoguePanel: {fileID: 395780588458309742}
+  dialoguePanel: {fileID: 9152470418678828274}
   dialogueText: {fileID: 8029907614182604177}

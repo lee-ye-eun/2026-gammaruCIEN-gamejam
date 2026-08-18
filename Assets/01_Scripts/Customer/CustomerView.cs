@@ -10,8 +10,6 @@ public class CustomerView : MonoBehaviour
 
     [Header("UI 참조")]
     [SerializeField] private Image portraitImage;
-    [SerializeField] private TMP_Text nameText;
-    [SerializeField] private TMP_Text worryText;
 
     public CustomerData Data => data;
 
@@ -29,7 +27,5 @@ public class CustomerView : MonoBehaviour
     private void Refresh()
     {
         if (portraitImage != null) portraitImage.sprite = data.portrait;
-        if (nameText != null) nameText.text = data.customerName;
-        if (worryText != null) worryText.text = data.worryText;
     }
 }
