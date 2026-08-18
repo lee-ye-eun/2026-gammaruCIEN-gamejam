@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
 
     [Header("단서 찾기")]
     [SerializeField] private GameObject clueFindingPanel;
+    [SerializeField] private ClueFinder clueFinder;
 
     [Header("카드 덱")]
     [SerializeField] private GameObject cardDeckPanel; // CardDeck 컴포넌트가 붙어있는 오브젝트
@@ -130,6 +131,22 @@ public class GameManager : MonoBehaviour
     private void EnterClueFinding()
     {
         SetPanels(dialogue: false, clueFinding: true, cardDeckOn: false, result: false);
+        if (clueFinder != null) clueFinder.ShowClues(currentCustomer);
+    }
+
+    // 단서 이미지 클릭 시(ClueFinder가 호출): 단서 찾기 패널 끄고 대사창에 단서 텍스트 출력. ClueFinding 상태는 그대로 유지.
+    public void ShowClueText(string text)
+    {
+        if (clueFindingPanel != null) clueFindingPanel.SetActive(false);
+        if (dialoguePanel != null) dialoguePanel.SetActive(true);
+        if (dialogueManager != null) dialogueManager.ShowDialogue(text);
+    }
+
+    // 단서 텍스트를 보다가 화면 터치 시(DialogueManager가 호출): 단서 찾기 패널로 복귀. ClueFinding 상태는 그대로 유지.
+    public void ReturnToClueFinding()
+    {
+        if (dialoguePanel != null) dialoguePanel.SetActive(false);
+        if (clueFindingPanel != null) clueFindingPanel.SetActive(true);
     }
 
     private void EnterQuestioning()

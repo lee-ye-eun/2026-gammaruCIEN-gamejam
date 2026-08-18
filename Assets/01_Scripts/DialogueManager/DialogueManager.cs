@@ -143,6 +143,11 @@ public class DialogueManager : MonoBehaviour
         {
             GameManager.Instance.ChangeState(GameManager.GameState.ClueFinding);
         }
+        else if (GameManager.Instance.CurrentState == GameManager.GameState.ClueFinding)
+        {
+            // 단서 텍스트를 보다가 터치하면 단서 찾기 화면으로 복귀 (ClueFinding 상태는 그대로 유지)
+            GameManager.Instance.ReturnToClueFinding();
+        }
         else if (GameManager.Instance.CurrentState == GameManager.GameState.ShowingCardResult)
         {
             GameManager.Instance.ChangeState(GameManager.GameState.ShowingResultPanel);
