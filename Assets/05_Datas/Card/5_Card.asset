@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baa2f717077c64cff8d6ca15fc6614a1, type: 3}
-  m_Name: 악마
+  m_Name: "\uC545\uB9C8"
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: 악마
+  cardName: "5\uBC88 \uCE74\uB4DC"
   symbol: {fileID: 0}
   keywords:
-  - 집착
-  description: 집착, 유혹, 쉽게 끊어내기 어려운 마음을 뜻한다.
+  - "\uC9D1\uCC29"
+  description: "\uC9D1\uCC29, \uC720\uD639, \uC27D\uAC8C \uB04A\uC5B4\uB0B4\uAE30
+    \uC5B4\uB824\uC6B4 \uB9C8\uC74C\uC744 \uB73B\uD55C\uB2E4."

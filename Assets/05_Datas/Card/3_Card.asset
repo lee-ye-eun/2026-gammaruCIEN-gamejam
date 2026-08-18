@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baa2f717077c64cff8d6ca15fc6614a1, type: 3}
-  m_Name: 탑
+  m_Name: "\uD0D1"
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: 탑
+  cardName: "3\uBC88 \uCE74\uB4DC"
   symbol: {fileID: 0}
   keywords:
-  - 갈등
-  description: 갑작스러운 충돌, 불화, 관계를 흔드는 사건을 뜻한다.
+  - "\uAC08\uB4F1"
+  description: "\uAC11\uC791\uC2A4\uB7EC\uC6B4 \uCDA9\uB3CC, \uBD88\uD654, \uAD00\uACC4\uB97C
+    \uD754\uB4DC\uB294 \uC0AC\uAC74\uC744 \uB73B\uD55C\uB2E4."

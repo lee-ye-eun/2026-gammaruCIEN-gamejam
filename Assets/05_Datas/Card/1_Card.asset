@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baa2f717077c64cff8d6ca15fc6614a1, type: 3}
-  m_Name: 연인
+  m_Name: "\uC5F0\uC778"
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: 연인
+  cardName: "1\uBC88 \uCE74\uB4DC"
   symbol: {fileID: 0}
   keywords:
-  - 애정
-  description: 애정, 관계, 선택, 서로에게 향하는 마음을 뜻한다.
+  - "\uC560\uC815"
+  description: "\uC560\uC815, \uAD00\uACC4, \uC120\uD0DD, \uC11C\uB85C\uC5D0\uAC8C
+    \uD5A5\uD558\uB294 \uB9C8\uC74C\uC744 \uB73B\uD55C\uB2E4."
