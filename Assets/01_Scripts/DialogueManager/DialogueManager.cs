@@ -19,10 +19,16 @@ public class DialogueManager : MonoBehaviour
     [Header("질문창 (다이얼로그 패널의 자식, 질문 차례에만 사용)")]
     [SerializeField] private GameObject questionBox;
     [SerializeField] private Button[] questionButtons; // 질문 4개 버튼 (라벨은 버튼 자식의 TMP_Text에서 자동으로 채움)
+    [SerializeField] private Button finishQuestionButton;
+
+    [Header("질문 제한")]
+    [SerializeField] private int maxQuestionsPerCustomer = 2;
+    [SerializeField] private int secondQuestionSuspicionPenalty = 5;
 
     private Mode mode;
     private bool isTouchActive;
     private CustomerData questioningCustomer;
+    private int selectedQuestionCount;
 
     private void Awake()
     {
@@ -31,6 +37,8 @@ public class DialogueManager : MonoBehaviour
             int index = i; // 클로저 캡처용
             if (questionButtons[i] != null) questionButtons[i].onClick.AddListener(() => HandleQuestionButtonClicked(index));
         }
+
+        if (finishQuestionButton != null) finishQuestionButton.onClick.AddListener(FinishQuestioning);
     }
 
     private void OnDestroy()
@@ -39,6 +47,8 @@ public class DialogueManager : MonoBehaviour
         {
             if (button != null) button.onClick.RemoveAllListeners();
         }
+
+        if (finishQuestionButton != null) finishQuestionButton.onClick.RemoveListener(FinishQuestioning);
     }
 
     private void Update()
@@ -69,6 +79,7 @@ public class DialogueManager : MonoBehaviour
     public void ShowQuestionTurn(CustomerData customer)
     {
         questioningCustomer = customer;
+        selectedQuestionCount = 0;
         mode = Mode.SelectingQuestion;
         isTouchActive = false; // 터치 감지는 답변을 보여줄 때만 켠다
 
@@ -95,6 +106,7 @@ public class DialogueManager : MonoBehaviour
             button.gameObject.SetActive(hasQuestion);
             if (!hasQuestion) continue;
 
+            button.interactable = true;
             var label = button.GetComponentInChildren<TMP_Text>();
             if (label != null) label.text = questions[i].questionText;
         }
@@ -103,9 +115,16 @@ public class DialogueManager : MonoBehaviour
     private void HandleQuestionButtonClicked(int index)
     {
         if (mode != Mode.SelectingQuestion) return;
+        if (selectedQuestionCount >= maxQuestionsPerCustomer) return;
 
         var questions = questioningCustomer != null ? questioningCustomer.Dialogue.questions : null;
         if (questions == null || index >= questions.Count) return;
+
+        selectedQuestionCount++;
+        if (selectedQuestionCount > 1 && GameManager.Instance != null)
+        {
+            GameManager.Instance.AddSuspicion(secondQuestionSuspicionPenalty);
+        }
 
         mode = Mode.ShowingAnswer;
         SetBoxes(dialogueOn: true, questionOn: false);
@@ -113,6 +132,10 @@ public class DialogueManager : MonoBehaviour
         isTouchActive = true; // 터치하면 다시 질문창으로
 
         if (GameManager.Instance != null) GameManager.Instance.IncrementQuestionAskedCount();
+        if (index >= 0 && index < questionButtons.Length && questionButtons[index] != null)
+        {
+            questionButtons[index].interactable = false;
+        }
     }
 
     // 질문창의 "다음(질문 그만)" 버튼 onClick에 연결 -> 카드 덱으로 전환
@@ -133,6 +156,10 @@ public class DialogueManager : MonoBehaviour
             // 질문 차례 중 답변을 봤다면 다시 질문 선택으로 돌아간다 (GameManager 상태는 그대로 Questioning 유지)
             mode = Mode.SelectingQuestion;
             SetBoxes(dialogueOn: false, questionOn: true);
+            if (selectedQuestionCount >= maxQuestionsPerCustomer)
+            {
+                DisableQuestionButtons();
+            }
             return;
         }
 
@@ -146,6 +173,14 @@ public class DialogueManager : MonoBehaviour
         else if (GameManager.Instance.CurrentState == GameManager.GameState.ShowingCardResult)
         {
             GameManager.Instance.ChangeState(GameManager.GameState.ShowingResultPanel);
+        }
+    }
+
+    private void DisableQuestionButtons()
+    {
+        foreach (var button in questionButtons)
+        {
+            if (button != null) button.interactable = false;
         }
     }
 }

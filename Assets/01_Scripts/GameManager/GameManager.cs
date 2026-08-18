@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public int QuestionAskedCount => questionAskedCount;
     public int SuspicionLevel => suspicionLevel;
     public int CurrentCustomerSuspicion => currentCustomerSuspicion;
+    public CustomerData CurrentCustomer => currentCustomer;
 
     public static GameManager Instance { get; private set; }
 
@@ -100,6 +101,13 @@ public class GameManager : MonoBehaviour
         questionAskedCount++;
     }
 
+    public void AddSuspicion(int amount)
+    {
+        if (amount <= 0) return;
+
+        suspicionLevel = Mathf.Clamp(suspicionLevel + amount, 0, 100);
+    }
+
     private void SetPanels(bool dialogue, bool clueFinding, bool cardDeckOn, bool result)
     {
         if (dialoguePanel != null) dialoguePanel.SetActive(dialogue);
@@ -150,8 +158,10 @@ public class GameManager : MonoBehaviour
         SetPanels(dialogue: true, clueFinding: false, cardDeckOn: false, result: false);
 
         int matchCount = CalculateMatchCount();
-        currentCustomerSuspicion = matchCount;
-        suspicionLevel += matchCount;
+        int wrongCount = MaxTarotAnswerCount - matchCount;
+        int suspicionPenalty = GetCardResultSuspicionPenalty(wrongCount);
+        currentCustomerSuspicion = suspicionPenalty;
+        AddSuspicion(suspicionPenalty);
 
         string reaction = currentCustomer != null ? currentCustomer.GetReaction(matchCount) : string.Empty;
         if (dialogueManager != null) dialogueManager.ShowDialogue(reaction);
@@ -161,33 +171,44 @@ public class GameManager : MonoBehaviour
     private void EnterShowingResultPanel()
     {
         SetPanels(dialogue: false, clueFinding: false, cardDeckOn: false, result: true);
-        if (resultManager != null) resultManager.ShowResult(currentCustomerSuspicion.ToString());
+        if (resultManager != null) resultManager.ShowResult($"이번 손님 의심도 +{currentCustomerSuspicion}\n전체 의심도 {suspicionLevel}/100");
     }
 
     // 손님이 전부 끝나면 표시 (점수/평판 등은 아직 미구현)
     private void EnterFinalResult()
     {
         SetPanels(dialogue: false, clueFinding: false, cardDeckOn: false, result: true);
+        if (resultManager != null)
+        {
+            string finalText = suspicionLevel >= 100
+                ? $"배드 엔딩\n의심도 {suspicionLevel}/100"
+                : $"오늘의 상담 종료\n의심도 {suspicionLevel}/100";
+            resultManager.ShowResult(finalText);
+        }
     }
 
-    // 슬롯(원인/현재/조언) 배치가 아직 없어서, 선택한 3장 중 정답 3장과 겹치는 개수로만 채점
+    private const int MaxTarotAnswerCount = 3;
+
+    // 원인/현재/조언 슬롯의 카드와 손님 데이터의 정답 카드를 위치까지 비교한다.
     private int CalculateMatchCount()
     {
         if (cardDeck == null || currentCustomer == null) return 0;
 
-        var answerCards = new HashSet<CardData>
-        {
-            currentCustomer.causeCard,
-            currentCustomer.presentCard,
-            currentCustomer.adviceCard
-        };
+        return cardDeck.CountCorrectSlots(currentCustomer);
+    }
 
-        int count = 0;
-        foreach (var selected in cardDeck.SelectedCards)
+    private int GetCardResultSuspicionPenalty(int wrongCount)
+    {
+        switch (wrongCount)
         {
-            if (selected != null && answerCards.Contains(selected.Data)) count++;
+            case 0:
+                return 0;
+            case 1:
+                return 15;
+            case 2:
+                return 25;
+            default:
+                return 35;
         }
-
-        return count;
     }
 }
