@@ -38,7 +38,11 @@ public class ClueFinder : MonoBehaviour
         var clues = currentCustomer != null ? currentCustomer.Dialogue.clues : null;
         if (clues == null || index >= clues.Count) return;
 
-        if (GameManager.Instance != null) GameManager.Instance.ShowClueText(clues[index]);
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ShowClueText(clues[index]);
+            GameManager.Instance.IncrementClueFindCount();
+        }
     }
 
     // 단서 찾기 화면의 "다음(질문하기로)" 버튼 onClick에 연결

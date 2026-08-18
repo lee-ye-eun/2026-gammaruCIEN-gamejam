@@ -4,11 +4,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [Header("스탯")]
-    [SerializeField] private int questionAskedCount; // 질문 횟수 (전체 누적)
+    [SerializeField] private int questionAskedCount; // 질문 횟수 (현재 손님 기준, 결과창에서 초기화)
+    [SerializeField] private int clueFindCount; // 단서 찾기 횟수 (현재 손님 기준, 결과창에서 초기화)
     [SerializeField] private int suspicionLevel; // 의심도 (전체 누적)
-    [SerializeField] private int currentCustomerSuspicion; // 현재 손님 의심도
+    [SerializeField] private int currentCustomerSuspicion; // 현재 손님 의심도 (결과창에서 초기화)
 
     public int QuestionAskedCount => questionAskedCount;
+    public int ClueFindCount => clueFindCount;
     public int SuspicionLevel => suspicionLevel;
     public int CurrentCustomerSuspicion => currentCustomerSuspicion;
 
@@ -101,6 +103,11 @@ public class GameManager : MonoBehaviour
         questionAskedCount++;
     }
 
+    public void IncrementClueFindCount()
+    {
+        clueFindCount++;
+    }
+
     private void SetPanels(bool dialogue, bool clueFinding, bool cardDeckOn, bool result)
     {
         if (dialoguePanel != null) dialoguePanel.SetActive(dialogue);
@@ -155,30 +162,56 @@ public class GameManager : MonoBehaviour
         if (dialogueManager != null) dialogueManager.ShowQuestionTurn(currentCustomer);
     }
 
+    // 질문이 끝나고(질문창의 "다음" 버튼) 카드 덱으로 넘어올 때: 질문 횟수에 따라 현재 손님 의심도에 보너스를 더한다
     private void EnterCardSelecting()
     {
+        if (questionAskedCount == 2) currentCustomerSuspicion += 5;
+        else if (questionAskedCount == 3) currentCustomerSuspicion += 10;
+        else if (questionAskedCount >= 4) currentCustomerSuspicion += 20;
+
         SetPanels(dialogue: false, clueFinding: false, cardDeckOn: true, result: false);
         if (cardDeck != null) cardDeck.PrepareForNewRound();
     }
 
-    // 카드 제출 후 결과 대사 출력 (대사창 재사용해서 한 줄만 보여주고 터치하면 결과창으로)
+    // 카드 제출 후 결과 대사 출력. 오답 개수에 따라 현재 손님 의심도를 가감한다.
     private void EnterShowingCardResult()
     {
         SetPanels(dialogue: true, clueFinding: false, cardDeckOn: false, result: false);
 
         int matchCount = CalculateMatchCount();
-        currentCustomerSuspicion = matchCount;
-        suspicionLevel += matchCount;
+        int wrongCount = 3 - matchCount;
+        currentCustomerSuspicion += GetCardResultSuspicionDelta(wrongCount);
 
         string reaction = currentCustomer != null ? currentCustomer.GetReaction(matchCount) : string.Empty;
         if (dialogueManager != null) dialogueManager.ShowDialogue(reaction);
     }
 
-    // 결과창: 현재 손님 의심도를 출력. 터치하면 다음 손님으로 넘어감(ResultManager가 처리)
+    private int GetCardResultSuspicionDelta(int wrongCount)
+    {
+        switch (wrongCount)
+        {
+            case 0: return -20;
+            case 1: return 15;
+            case 2: return 25;
+            case 3: return 35;
+            default: return 0;
+        }
+    }
+
+    // 결과창: 전체 의심도에 현재 손님 의심도를 반영하고 텍스트로 출력한 뒤, 다음 손님을 위해 라운드 스탯을 초기화한다.
+    // 터치하면 다음 손님으로 넘어감(ResultManager가 처리)
     private void EnterShowingResultPanel()
     {
         SetPanels(dialogue: false, clueFinding: false, cardDeckOn: false, result: true);
-        if (resultManager != null) resultManager.ShowResult(currentCustomerSuspicion.ToString());
+
+        suspicionLevel += currentCustomerSuspicion;
+
+        string text = $"손님의 의심도: {currentCustomerSuspicion}\n전체의심도: {suspicionLevel}";
+        if (resultManager != null) resultManager.ShowResult(text);
+
+        questionAskedCount = 0;
+        clueFindCount = 0;
+        currentCustomerSuspicion = 0;
     }
 
     // 손님이 전부 끝나면 표시 (점수/평판 등은 아직 미구현)

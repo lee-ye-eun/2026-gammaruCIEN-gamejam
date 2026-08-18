@@ -619,11 +619,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1953623660}
   - {fileID: 1319712256}
   - {fileID: 1247184031}
   - {fileID: 775061172}
   - {fileID: 604251297}
-  - {fileID: 1953623660}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -929,6 +929,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6579847739379439245, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
   m_PrefabInstance: {fileID: 368762366}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1247184035 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 666594933519061110, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
+  m_PrefabInstance: {fileID: 368762366}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247184030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa71d5279f80b4ccebb81612eba019bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ClueFinder
 --- !u!1001 &1308983278
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1090,6 +1101,7 @@ MonoBehaviour:
   dialoguePanel: {fileID: 775061171}
   dialogueManager: {fileID: 775061173}
   clueFindingPanel: {fileID: 1247184030}
+  clueFinder: {fileID: 1247184035}
   cardDeckPanel: {fileID: 1319712255}
   cardDeck: {fileID: 1319712257}
   resultPanel: {fileID: 604251296}
