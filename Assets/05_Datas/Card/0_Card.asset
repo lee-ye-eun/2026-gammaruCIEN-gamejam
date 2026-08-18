@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baa2f717077c64cff8d6ca15fc6614a1, type: 3}
-  m_Name: 0_Card
+  m_Name: 달
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: "0\uBC88\uCE74\uB4DC"
+  cardName: 달
   symbol: {fileID: 0}
-  keywords: []
-  description: 
+  keywords:
+  - 비밀
+  description: 숨겨진 마음, 말하지 못한 불안, 아직 드러나지 않은 진실을 뜻한다.

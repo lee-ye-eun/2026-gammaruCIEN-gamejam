@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baa2f717077c64cff8d6ca15fc6614a1, type: 3}
-  m_Name: 2_Card
+  m_Name: 태양
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: "2\uBC88\uCE74\uB4DC"
+  cardName: 태양
   symbol: {fileID: 0}
-  keywords: []
-  description: 
+  keywords:
+  - 솔직
+  description: 솔직함, 밝은 결말, 감춰진 것이 드러나는 순간을 뜻한다.

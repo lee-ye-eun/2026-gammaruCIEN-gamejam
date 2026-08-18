@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: baa2f717077c64cff8d6ca15fc6614a1, type: 3}
-  m_Name: 4_Card
+  m_Name: 은둔자
   m_EditorClassIdentifier: Assembly-CSharp::CardData
-  cardName: "4\uBC88\uCE74\uB4DC"
+  cardName: 은둔자
   symbol: {fileID: 0}
-  keywords: []
-  description: 
+  keywords:
+  - 기다림
+  description: 기다림, 관찰, 혼자 생각할 시간이 필요한 상태를 뜻한다.
