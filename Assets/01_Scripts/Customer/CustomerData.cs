@@ -1,5 +1,12 @@
 using UnityEngine;
 
+[System.Serializable]
+public class ClueVisual
+{
+    public Sprite sprite;
+    public Vector2 position; // 단서 이미지의 anchoredPosition
+}
+
 [CreateAssetMenu(fileName = "NewCustomerData", menuName = "Tarot/Customer Data")]
 public class CustomerData : ScriptableObject
 {
@@ -21,6 +28,9 @@ public class CustomerData : ScriptableObject
     public CardData causeCard;
     public CardData presentCard;
     public CardData adviceCard;
+
+    [Header("단서 이미지 3개 (스프라이트 + 좌표). CSV의 clue1~3과 순서로 매칭됨")]
+    public ClueVisual[] clueVisuals;
 
     private CustomerDialogueData cachedDialogue;
 

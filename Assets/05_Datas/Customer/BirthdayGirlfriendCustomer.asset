@@ -20,8 +20,15 @@ MonoBehaviour:
     \uC5EC\uB9AC\uC5EC\uB9AC\uD55C \uC6D0\uD53C\uC2A4. \uCCAD\uC21C\uD55C \uC778\uC0C1."
   situationDescription: "\uB0A8\uC790\uCE5C\uAD6C\uAC00 \uC0DD\uC77C \uC11C\uD504\uB77C\uC774\uC988\uB97C
     \uC900\uBE44\uD558\uACE0 \uC788\uB2E4. \uAE30\uB2E4\uB9AC\uBA74 \uD574\uACB0\uB41C\uB2E4."
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: f2a4ec76fbfea480a96a690543579648, type: 3}
   dialogueCsv: {fileID: 4900000, guid: 6af0c2bc894cb4b999d0e78be10ff050, type: 3}
   causeCard: {fileID: 11400000, guid: db0fc53dd478a4f5ab0c23c6b314ad45, type: 2}
   presentCard: {fileID: 11400000, guid: 552e233c27ba8448088038b68babb595, type: 2}
   adviceCard: {fileID: 11400000, guid: 64ee44da0823e4776a68fe02959aba57, type: 2}
+  clueVisuals:
+  - sprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+    position: {x: 100, y: 10}
+  - sprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+    position: {x: -50, y: -10}
+  - sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+    position: {x: -10, y: 30}

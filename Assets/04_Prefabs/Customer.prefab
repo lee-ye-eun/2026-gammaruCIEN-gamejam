@@ -419,6 +419,7 @@ GameObject:
   - component: {fileID: 4067087368098087565}
   - component: {fileID: 5086658869253652768}
   - component: {fileID: 2461159322475382526}
+  - component: {fileID: 596818434541543155}
   m_Layer: 5
   m_Name: Customer
   m_TagString: Untagged
@@ -486,3 +487,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &596818434541543155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5757727396816207542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5505b936daf544c2bfb0b3843ef9540, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomerView
+  data: {fileID: 0}
+  portraitImage: {fileID: 2461159322475382526}
+  clueImages:
+  - {fileID: 1848052214529892246}
+  - {fileID: 9052745625466652532}
+  - {fileID: 4591981175026066497}
