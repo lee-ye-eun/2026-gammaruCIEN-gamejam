@@ -151,7 +151,8 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         EnsureReferences();
         CurrentSlot = slot;
         SetSelected(true);
-        SetSlotRole(slot.DisplayName);
+        SetSlotRole(string.Empty);
+        SetFaceUp(false, true);
         UpdateFrontPreviewState(true);
 
         RectTransform slotRect = (RectTransform)slot.transform;
@@ -199,7 +200,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         if (selectedIndicator != null)
         {
-            selectedIndicator.SetActive(selected);
+            selectedIndicator.SetActive(false);
         }
     }
 
@@ -211,6 +212,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (frontRoot != null) frontRoot.SetActive(faceUp);
         if (backRoot != null) backRoot.SetActive(!faceUp);
         if (cardBodyImage != null) cardBodyImage.color = faceUp ? frontColor : backColor;
+        if (selectedIndicator != null) selectedIndicator.SetActive(false);
 
         UpdateFrontPreviewState(instant);
         if (instant) rectTransform.localScale = Vector3.one;
