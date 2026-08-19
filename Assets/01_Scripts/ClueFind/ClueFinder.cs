@@ -17,6 +17,9 @@ public class ClueFinder : MonoBehaviour
     [SerializeField] private Button clueZoomCloseButton;
     [SerializeField] private bool showClueTextInZoom;
 
+    [Header("사운드 키")]
+    [SerializeField] private string clueClickSfxKey = "piiik";
+
     private CustomerData currentCustomer;
     private bool isInteractable;
     private readonly System.Collections.Generic.List<Button> boundButtons = new System.Collections.Generic.List<Button>();
@@ -113,6 +116,7 @@ public class ClueFinder : MonoBehaviour
     {
         if (!isInteractable) return;
 
+        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(clueClickSfxKey);
         var clues = currentCustomer != null ? currentCustomer.Dialogue.clues : null;
         string clueText = clues != null && index >= 0 && index < clues.Count ? clues[index] : string.Empty;
 

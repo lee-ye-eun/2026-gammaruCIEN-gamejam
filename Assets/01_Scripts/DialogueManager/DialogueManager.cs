@@ -20,6 +20,9 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private GameObject questionBox;
     [SerializeField] private Button[] questionButtons; // 질문 4개 버튼 (라벨은 버튼 자식의 TMP_Text에서 자동으로 채움)
 
+    [Header("사운드 키")]
+    [SerializeField] private string questionClickSfxKey = "piiik";
+
     private Mode mode;
     private bool isTouchActive;
     private CustomerData questioningCustomer;
@@ -102,6 +105,7 @@ public class DialogueManager : MonoBehaviour
 
     private void HandleQuestionButtonClicked(int index)
     {
+        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(questionClickSfxKey);
         if (mode != Mode.SelectingQuestion) return;
 
         var questions = questioningCustomer != null ? questioningCustomer.Dialogue.questions : null;

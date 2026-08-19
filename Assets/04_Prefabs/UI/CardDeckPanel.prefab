@@ -4413,8 +4413,9 @@ MonoBehaviour:
   drawInterval: 0.04
   mirrorPreviewFadeDuration: 0.18
   flipDuration: 0.26
-  cardDrawSfxKey: cardDraw
-  cardFlipSfxKey: cardFlip
+  cardDrawSfxKey: drrrrr
+  cardFlipSfxKey: chak
+  cardPlaceSfxKey: toook
 --- !u!114 &2592163539488300367
 MonoBehaviour:
   m_ObjectHideFlags: 0

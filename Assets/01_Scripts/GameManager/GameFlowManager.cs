@@ -64,7 +64,15 @@ public class GameFlowManager : MonoBehaviour
 
     private void Start()
     {
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayBGM("MainBGM");
         ChangeState(GameState.Observing);
+    }
+
+    private static void PlaySfx(string key)
+    {
+        if (string.IsNullOrEmpty(key) || SoundManager.Instance == null) return;
+
+        SoundManager.Instance.PlaySFX(key);
     }
 
     // 상태 전환 함수. 버튼/터치 핸들러가 원하는 상태를 넘기면 그 상태의 진입 로직을 실행한다.
@@ -78,21 +86,27 @@ public class GameFlowManager : MonoBehaviour
         switch (newState)
         {
             case GameState.Observing:
+                PlaySfx("doorbell");
                 EnterObserving();
                 break;
             case GameState.ClueFinding:
+                PlaySfx("chhhhhik");
                 EnterClueFinding();
                 break;
             case GameState.Questioning:
+                PlaySfx("chhhhhik");
                 EnterQuestioning();
                 break;
             case GameState.CardSelecting:
+                PlaySfx("chhhhhik");
                 EnterCardSelecting();
                 break;
             case GameState.ShowingCardResult:
+                PlaySfx("baam");
                 EnterShowingCardResult();
                 break;
             case GameState.ShowingResultPanel:
+                PlaySfx("brrr");
                 EnterShowingResultPanel();
                 break;
         }

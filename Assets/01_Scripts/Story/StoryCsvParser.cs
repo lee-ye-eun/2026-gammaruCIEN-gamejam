@@ -3,22 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // 한 컷의 정보. speaker/text 둘 다 비어있으면 그 컷은 대사 없음(대사창 비활성화)으로 취급된다.
-// imageKey/bgmKey는 비어있으면 "이전 컷 그대로 유지"를 뜻한다 (값이 있는 행에서만 바뀜).
+// imageKey/bgmKey/effectKey는 비어있으면 "이전 컷 그대로 유지"를 뜻한다 (값이 있는 행에서만 바뀜).
+// imageKey는 실제 스프라이트 키만, effectKey는 fadeout/fadein 같은 연출 키워드만 담아 서로 섞이지 않는다.
 public class StoryLine
 {
     public string speaker = string.Empty;
     public string imageKey = string.Empty;
     public string bgmKey = string.Empty;
+    public string effectKey = string.Empty;
     public string text = string.Empty;
 }
 
-// "speaker,image,bgm,text" 4컬럼 CSV를 순서 그대로 파싱한다. 행의 순서(인덱스)가 곧 컷 번호라서
+// "speaker,image,bgm,effect,text" 5컬럼 CSV를 순서 그대로 파싱한다. 행의 순서(인덱스)가 곧 컷 번호라서
 // CustomerData용 CsvDialogueParser(key,value 딕셔너리)와 달리 순서를 보존해야 한다.
-// text는 마지막 컬럼이라 콤마가 들어있어도 이스케이프 없이 그대로 써도 된다 (앞 3개 콤마까지만 구분자로 씀).
-// 대사 없는 컷은 빈 행(",,,")으로 남겨두면 되고, 파일 맨 끝의 개행으로 생기는 마지막 빈 줄만 무시한다.
+// text는 마지막 컬럼이라 콤마가 들어있어도 이스케이프 없이 그대로 써도 된다 (앞 4개 콤마까지만 구분자로 씀).
+// 대사 없는 컷은 빈 행(",,,,")으로 남겨두면 되고, 파일 맨 끝의 개행으로 생기는 마지막 빈 줄만 무시한다.
 public static class StoryCsvParser
 {
-    private const int ColumnCount = 4;
+    private const int ColumnCount = 5;
 
     public static List<StoryLine> Parse(TextAsset csv)
     {
@@ -35,7 +37,7 @@ public static class StoryCsvParser
             if (i == rawLines.Length - 1 && line.Trim().Length == 0) continue;
 
             // 헤더 행은 맨 첫 줄일 때만 스킵 (중간의 빈/공란 행은 "대사 없는 컷"이라 건드리면 안 됨)
-            if (i == 0 && line.Trim().Equals("speaker,image,bgm,text", StringComparison.OrdinalIgnoreCase)) continue;
+            if (i == 0 && line.Trim().Equals("speaker,image,bgm,effect,text", StringComparison.OrdinalIgnoreCase)) continue;
 
             lines.Add(ParseLine(line));
         }
@@ -52,7 +54,8 @@ public static class StoryCsvParser
             speaker = UnquoteCsvField(fields[0]),
             imageKey = UnquoteCsvField(fields[1]),
             bgmKey = UnquoteCsvField(fields[2]),
-            text = UnquoteCsvField(fields[3])
+            effectKey = UnquoteCsvField(fields[3]),
+            text = UnquoteCsvField(fields[4])
         };
     }
 

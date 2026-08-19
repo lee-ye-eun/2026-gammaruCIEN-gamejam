@@ -33,6 +33,7 @@ public class CardDeck : MonoBehaviour
     [Header("사운드 키")]
     [SerializeField] private string cardDrawSfxKey = "cardDraw";
     [SerializeField] private string cardFlipSfxKey = "cardFlip";
+    [SerializeField] private string cardPlaceSfxKey = "drop";
 
     private readonly List<CardView> cards = new List<CardView>();
     private Canvas parentCanvas;
@@ -127,6 +128,7 @@ public class CardDeck : MonoBehaviour
 
         targetSlot.SetCard(card);
         card.MoveToSlot(targetSlot);
+        PlaySfx(cardPlaceSfxKey);
         UpdateActionButtons();
         return true;
     }
