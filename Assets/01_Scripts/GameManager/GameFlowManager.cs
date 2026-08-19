@@ -157,6 +157,10 @@ public class GameFlowManager : MonoBehaviour
         currentCustomer = customers[customerIndex];
         questionLogs.Clear();
         if (customerView != null) customerView.SetData(currentCustomer);
+        // 새 라운드 시작: 카드덱을 여기서 한 번만 리셋해둔다. EnterCardSelecting()은 이 라운드 안에서 몇 번을
+        // 다시 들어오든(질문하기로 돌아갔다 오든) cardDeck.CardsDrawn을 보고 재준비 여부를 판단하므로,
+        // 라운드 경계가 되는 시점(=여기)에서만 리셋해야 다음 손님으로 넘어가도 다시 뽑힌다.
+        if (cardDeck != null) cardDeck.PrepareForNewRound();
 
         SetPanels(dialogue: true, clueFinding: false, cardDeckOn: false, result: false);
         if (dialogueManager != null) dialogueManager.ShowDialogue(currentCustomer);
@@ -195,22 +199,18 @@ public class GameFlowManager : MonoBehaviour
 
     // 질문 답변을 하나 보거나(자동) "질문 그만" 버튼으로 카드 덱에 처음 넘어올 때: 질문 횟수에 따라 현재 손님
     // 의심도에 보너스를 더하고 카드를 뽑는다. 이후 "질문하기" 버튼으로 다시 질문했다가 돌아오는 경우엔
-    // 이미 뽑혀 있으므로(cardDeck.CardsDrawn) 보너스/재준비 없이 패널만 다시 보여준다.
+    // 이미 뽑혀 있으므로(cardDeck.CardsDrawn) 보너스 없이 패널만 다시 보여준다.
+    // 카드덱 자체의 리셋(PrepareForNewRound)은 라운드 시작 시점인 EnterObserving()에서 한 번만 한다.
     private void EnterCardSelecting()
     {
         bool alreadyDrawn = cardDeck != null && cardDeck.CardsDrawn;
 
-        if (!alreadyDrawn)
+        if (!alreadyDrawn && GameManager.Instance != null)
         {
-            if (GameManager.Instance != null)
-            {
-                int askedCount = GameManager.Instance.QuestionAskedCount;
-                if (askedCount == 2) GameManager.Instance.AddCurrentCustomerSuspicion(5);
-                else if (askedCount == 3) GameManager.Instance.AddCurrentCustomerSuspicion(10);
-                else if (askedCount >= 4) GameManager.Instance.AddCurrentCustomerSuspicion(20);
-            }
-
-            if (cardDeck != null) cardDeck.PrepareForNewRound();
+            int askedCount = GameManager.Instance.QuestionAskedCount;
+            if (askedCount == 2) GameManager.Instance.AddCurrentCustomerSuspicion(5);
+            else if (askedCount == 3) GameManager.Instance.AddCurrentCustomerSuspicion(10);
+            else if (askedCount >= 4) GameManager.Instance.AddCurrentCustomerSuspicion(20);
         }
 
         SetPanels(dialogue: false, clueFinding: false, cardDeckOn: true, result: false);
