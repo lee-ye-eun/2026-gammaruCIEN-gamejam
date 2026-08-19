@@ -1,29 +1,46 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
+using TMPro;
 
-// 단서 찾기 화면. 손님 프리팹 자식으로 있는 단서 이미지 3개를 클릭하면 대사창에 해당 단서 텍스트를 보여준다.
+// 단서 찾기 화면. 손님 프리팹 자식으로 있는 단서 이미지 3개를 클릭하면 ClueFindingPanel 안의 확대 레이어를 보여준다.
 // "다음(질문하기로)" 버튼은 인스펙터에서 이 컴포넌트의 ConfirmClueFinding()을 참조하도록 연결한다.
 public class ClueFinder : MonoBehaviour
 {
     [Header("단서 이미지 3개 (손님 프리팹의 자식, Button 컴포넌트 필요)")]
     [SerializeField] private Button[] clueButtons;
 
+    [Header("단서 확대 오버레이 (ClueFindingPanel 내부)")]
+    [SerializeField] private GameObject clueZoomPanel;
+    [SerializeField] private Image clueZoomImage;
+    [SerializeField] private TMP_Text clueZoomText;
+    [SerializeField] private Button clueZoomCloseButton;
+    [SerializeField] private bool showClueTextInZoom;
+
     private CustomerData currentCustomer;
+    private bool isInteractable;
+    private readonly System.Collections.Generic.List<Button> boundButtons = new System.Collections.Generic.List<Button>();
+    private readonly System.Collections.Generic.List<UnityAction> boundActions = new System.Collections.Generic.List<UnityAction>();
 
     private void Awake()
     {
-        for (int i = 0; i < clueButtons.Length; i++)
+        BindClueButtons();
+
+        if (clueZoomCloseButton != null)
         {
-            int index = i; // 클로저 캡처용
-            if (clueButtons[i] != null) clueButtons[i].onClick.AddListener(() => HandleClueButtonClicked(index));
+            clueZoomCloseButton.onClick.AddListener(CloseClueZoom);
         }
+
+        HideClueZoom();
     }
 
     private void OnDestroy()
     {
-        foreach (var button in clueButtons)
+        ClearBoundClueButtons();
+
+        if (clueZoomCloseButton != null)
         {
-            if (button != null) button.onClick.RemoveAllListeners();
+            clueZoomCloseButton.onClick.RemoveListener(CloseClueZoom);
         }
     }
 
@@ -31,11 +48,58 @@ public class ClueFinder : MonoBehaviour
     public void ShowClues(CustomerData customer)
     {
         currentCustomer = customer;
+        HideClueZoom();
     }
 
     // 단서 찾기 상태가 아닐 때 GameManager가 호출: 클릭(interactable)과 호버(raycastTarget) 둘 다 막는다
     public void SetInteractable(bool enabled)
     {
+        isInteractable = enabled;
+        if (!enabled) HideClueZoom();
+        SetClueButtonsEnabled(enabled);
+    }
+
+    public void CloseClueZoom()
+    {
+        HideClueZoom();
+        SetClueButtonsEnabled(isInteractable);
+    }
+
+    private void BindClueButtons()
+    {
+        ClearBoundClueButtons();
+        if (clueButtons == null) return;
+
+        for (int i = 0; i < clueButtons.Length; i++)
+        {
+            Button button = clueButtons[i];
+            if (button == null) continue;
+
+            int index = i; // 클로저 캡처용
+            UnityAction action = () => HandleClueButtonClicked(index);
+            button.onClick.AddListener(action);
+            boundButtons.Add(button);
+            boundActions.Add(action);
+        }
+    }
+
+    private void ClearBoundClueButtons()
+    {
+        for (int i = 0; i < boundButtons.Count; i++)
+        {
+            Button button = boundButtons[i];
+            UnityAction action = i < boundActions.Count ? boundActions[i] : null;
+            if (button != null && action != null) button.onClick.RemoveListener(action);
+        }
+
+        boundButtons.Clear();
+        boundActions.Clear();
+    }
+
+    private void SetClueButtonsEnabled(bool enabled)
+    {
+        if (clueButtons == null) return;
+
         foreach (var button in clueButtons)
         {
             if (button == null) continue;
@@ -47,13 +111,70 @@ public class ClueFinder : MonoBehaviour
 
     private void HandleClueButtonClicked(int index)
     {
+        if (!isInteractable) return;
+
         var clues = currentCustomer != null ? currentCustomer.Dialogue.clues : null;
-        if (clues == null || index >= clues.Count) return;
+        string clueText = clues != null && index >= 0 && index < clues.Count ? clues[index] : string.Empty;
+
+        ShowClueZoom(index, clueText);
 
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.ShowClueText(clues[index]);
             GameManager.Instance.IncrementClueFindCount();
+        }
+    }
+
+    private void ShowClueZoom(int index, string clueText)
+    {
+        if (clueZoomPanel == null) return;
+
+        Sprite clueSprite = GetClueSprite(index);
+        if (clueZoomImage != null)
+        {
+            clueZoomImage.sprite = clueSprite;
+            clueZoomImage.enabled = clueSprite != null;
+        }
+
+        if (clueZoomText != null)
+        {
+            clueZoomText.gameObject.SetActive(showClueTextInZoom && !string.IsNullOrWhiteSpace(clueText));
+            clueZoomText.text = clueText;
+        }
+
+        clueZoomPanel.transform.SetAsLastSibling();
+        clueZoomPanel.SetActive(true);
+        SetClueButtonsEnabled(false);
+    }
+
+    private Sprite GetClueSprite(int index)
+    {
+        var visuals = currentCustomer != null ? currentCustomer.clueVisuals : null;
+        if (visuals != null && index >= 0 && index < visuals.Length && visuals[index] != null)
+        {
+            return visuals[index].sprite;
+        }
+
+        if (clueButtons != null && index >= 0 && index < clueButtons.Length)
+        {
+            Image image = clueButtons[index] != null ? clueButtons[index].targetGraphic as Image : null;
+            if (image != null) return image.sprite;
+        }
+
+        return null;
+    }
+
+    private void HideClueZoom()
+    {
+        if (clueZoomPanel != null) clueZoomPanel.SetActive(false);
+        if (clueZoomImage != null)
+        {
+            clueZoomImage.sprite = null;
+            clueZoomImage.enabled = false;
+        }
+        if (clueZoomText != null)
+        {
+            clueZoomText.text = string.Empty;
+            clueZoomText.gameObject.SetActive(false);
         }
     }
 

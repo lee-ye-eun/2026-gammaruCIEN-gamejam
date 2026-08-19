@@ -185,8 +185,8 @@ MonoBehaviour:
   previewSymbolImage: {fileID: 7156482814280491484}
   previewNameText: {fileID: 8802812229505754912}
   previewKeywordText: {fileID: 2284214036907260392}
-  frontPreviewCollapsedY: -44
-  frontPreviewExpandedY: -174
+  frontPreviewCollapsedY: -124
+  frontPreviewExpandedY: -244
   frontPreviewSlideDuration: 0.16
   backColor: {r: 0.3647059, g: 0.09803922, b: 0.19215687, a: 1}
   frontColor: {r: 0.972549, g: 0.9647059, b: 0.93333334, a: 1}
