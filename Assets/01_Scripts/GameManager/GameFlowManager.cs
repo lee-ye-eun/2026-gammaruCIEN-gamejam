@@ -193,19 +193,28 @@ public class GameFlowManager : MonoBehaviour
         if (dialogueManager != null) dialogueManager.ShowQuestionTurn(currentCustomer);
     }
 
-    // 질문이 끝나고(질문창의 "다음" 버튼) 카드 덱으로 넘어올 때: 질문 횟수에 따라 현재 손님 의심도에 보너스를 더한다
+    // 질문 답변을 하나 보거나(자동) "질문 그만" 버튼으로 카드 덱에 처음 넘어올 때: 질문 횟수에 따라 현재 손님
+    // 의심도에 보너스를 더하고 카드를 뽑는다. 이후 "질문하기" 버튼으로 다시 질문했다가 돌아오는 경우엔
+    // 이미 뽑혀 있으므로(cardDeck.CardsDrawn) 보너스/재준비 없이 패널만 다시 보여준다.
     private void EnterCardSelecting()
     {
-        if (GameManager.Instance != null)
+        bool alreadyDrawn = cardDeck != null && cardDeck.CardsDrawn;
+
+        if (!alreadyDrawn)
         {
-            int askedCount = GameManager.Instance.QuestionAskedCount;
-            if (askedCount == 2) GameManager.Instance.AddCurrentCustomerSuspicion(5);
-            else if (askedCount == 3) GameManager.Instance.AddCurrentCustomerSuspicion(10);
-            else if (askedCount >= 4) GameManager.Instance.AddCurrentCustomerSuspicion(20);
+            if (GameManager.Instance != null)
+            {
+                int askedCount = GameManager.Instance.QuestionAskedCount;
+                if (askedCount == 2) GameManager.Instance.AddCurrentCustomerSuspicion(5);
+                else if (askedCount == 3) GameManager.Instance.AddCurrentCustomerSuspicion(10);
+                else if (askedCount >= 4) GameManager.Instance.AddCurrentCustomerSuspicion(20);
+            }
+
+            if (cardDeck != null) cardDeck.PrepareForNewRound();
         }
 
         SetPanels(dialogue: false, clueFinding: false, cardDeckOn: true, result: false);
-        if (cardDeck != null) cardDeck.PrepareForNewRound();
+        if (cardDeck != null) cardDeck.DrawCards();
     }
 
     // 카드 제출 후 결과 대사 출력. 오답 개수에 따라 현재 손님 의심도를 가감한다.

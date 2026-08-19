@@ -60,15 +60,16 @@ public class GameManager : MonoBehaviour
         clueFindCount++;
     }
 
+    // 의심도는 음수로 내려가지 않는다 (0이 최솟값). 예: 15에서 -30 -> 0, 이후 +25 -> 25.
     public void AddCurrentCustomerSuspicion(int amount)
     {
-        currentCustomerSuspicion += amount;
+        currentCustomerSuspicion = Mathf.Max(0, currentCustomerSuspicion + amount);
     }
 
     // 현재 손님 의심도를 전체 의심도에 반영한다 (currentCustomerSuspicion 자체는 아직 초기화하지 않음 - 결과창 텍스트에서 필요)
     public void CommitCurrentCustomerSuspicion()
     {
-        suspicionLevel += currentCustomerSuspicion;
+        suspicionLevel = Mathf.Max(0, suspicionLevel + currentCustomerSuspicion);
     }
 
     // 다음 손님으로 넘어가기 전, 이번 라운드에서 쓴 스탯을 전부 초기화

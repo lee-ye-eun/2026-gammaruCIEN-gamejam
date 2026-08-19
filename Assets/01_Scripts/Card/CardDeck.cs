@@ -10,19 +10,21 @@ public class CardDeck : MonoBehaviour
     private const int DeckCardCount = 6;
     private const int MaxSelectable = 3;
 
-    [Header("카드 수집/드로우")]
+    [Header("카드 수집/드로우 (질문 1회 답변 시 자동으로 드로우됨)")]
     [SerializeField] private CardCollector cardCollector;
     [SerializeField] private RectTransform cardContainer;
     [SerializeField] private RectTransform dragLayer;
     [SerializeField] private RectTransform stackPoint;
     [SerializeField] private GameObject stackVisual;
-    [SerializeField] private Button drawButton;
 
     [Header("선택 슬롯")]
     [SerializeField] private CardSelectionSlot[] selectionSlots = new CardSelectionSlot[MaxSelectable];
 
     [Header("3장 선택 완료 시 활성화할 버튼")]
     [SerializeField] private Button nextButton;
+
+    [Header("질문하기 (질문 패널을 다시 열어 추가 질문)")]
+    [SerializeField] private Button askAgainButton;
 
     [Header("연출")]
     [SerializeField] private float drawDuration = 0.22f;
@@ -51,6 +53,7 @@ public class CardDeck : MonoBehaviour
         ? parentCanvas.worldCamera
         : null;
     public bool CanInteractWithCards => cardsDrawn && !isDrawing && !isResolving;
+    public bool CardsDrawn => cardsDrawn;
 
     private void Awake()
     {
@@ -58,16 +61,16 @@ public class CardDeck : MonoBehaviour
         SetupSlots();
         SetupCards();
 
-        if (drawButton != null) drawButton.onClick.AddListener(DrawCards);
         if (nextButton != null) nextButton.onClick.AddListener(ConfirmSelection);
+        if (askAgainButton != null) askAgainButton.onClick.AddListener(OpenQuestioning);
 
         UpdateActionButtons();
     }
 
     private void OnDestroy()
     {
-        if (drawButton != null) drawButton.onClick.RemoveListener(DrawCards);
         if (nextButton != null) nextButton.onClick.RemoveListener(ConfirmSelection);
+        if (askAgainButton != null) askAgainButton.onClick.RemoveListener(OpenQuestioning);
 
         foreach (var card in cards)
         {
@@ -100,11 +103,19 @@ public class CardDeck : MonoBehaviour
         UpdateActionButtons();
     }
 
+    // 질문 답변을 하나 보고 나면 GameFlowManager가 자동으로 호출한다. 이미 뽑혀 있으면 아무 일도 하지 않는다.
     public void DrawCards()
     {
         if (cardsDrawn || isDrawing || isResolving || cards.Count == 0) return;
 
         StartCoroutine(DrawCardsRoutine());
+    }
+
+    // "질문하기" 버튼 onClick에 연결: 질문 패널을 다시 열어 추가로 질문할 수 있게 한다.
+    public void OpenQuestioning()
+    {
+        if (!CanInteractWithCards) return;
+        if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.Questioning);
     }
 
     public bool PlaceCardInSlot(CardView card, CardSelectionSlot targetSlot)
@@ -316,18 +327,16 @@ public class CardDeck : MonoBehaviour
 
     private void UpdateActionButtons()
     {
-        if (drawButton != null)
-        {
-            bool showDrawButton = !cardsDrawn && !isResolving;
-            drawButton.gameObject.SetActive(showDrawButton);
-            drawButton.interactable = showDrawButton && !isDrawing && cards.Count > 0;
-        }
-
         if (nextButton != null)
         {
             bool showNextButton = cardsDrawn || isResolving;
             nextButton.gameObject.SetActive(showNextButton);
             nextButton.interactable = showNextButton && !isResolving && SelectedCards.Count == MaxSelectable;
+        }
+
+        if (askAgainButton != null)
+        {
+            askAgainButton.interactable = CanInteractWithCards;
         }
     }
 

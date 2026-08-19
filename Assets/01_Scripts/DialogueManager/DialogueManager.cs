@@ -138,9 +138,10 @@ public class DialogueManager : MonoBehaviour
 
         if (mode == Mode.ShowingAnswer)
         {
-            // 질문 차례 중 답변을 봤다면 다시 질문 선택으로 돌아간다 (흐름 상태는 그대로 Questioning 유지)
-            mode = Mode.SelectingQuestion;
-            SetBoxes(dialogueOn: false, questionOn: true);
+            // 질문을 1회 답변까지 보면 곧장 카드 덱으로 넘어간다 (이미 뽑혀 있으면 GameFlowManager가 재준비 없이 패널만 보여줌).
+            // 더 물어보고 싶으면 카드덱 패널의 "질문하기" 버튼으로 다시 이 상태로 돌아올 수 있다.
+            mode = Mode.Normal;
+            if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.CardSelecting);
             return;
         }
 
