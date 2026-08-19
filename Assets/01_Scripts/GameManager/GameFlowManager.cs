@@ -64,6 +64,7 @@ public class GameFlowManager : MonoBehaviour
 
     private void Start()
     {
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayBGM("MainBGM");
         ChangeState(GameState.Observing);
     }
 

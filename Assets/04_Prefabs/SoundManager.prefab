@@ -50,6 +50,12 @@ MonoBehaviour:
   bgmClips:
   - key: MainBGM
     clip: {fileID: 8300000, guid: 4331f02a8945546c6a056c686084b687, type: 3}
+  - key: prologue
+    clip: {fileID: 8300000, guid: a59d2af913d244c4882c1f54c354c1e9, type: 3}
+  - key: BadEnding
+    clip: {fileID: 8300000, guid: a2cb05deed47d4ce7971862b8b8f3d56, type: 3}
+  - key: HappyEnding
+    clip: {fileID: 8300000, guid: eecf2d8a0be514caf9fb0992a2a2a1e6, type: 3}
   initialSfxPoolSize: 4
   sfxClips: []
 --- !u!82 &8341867557479056031

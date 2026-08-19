@@ -1,0 +1,9 @@
+speaker,image,bgm,effect,text
+손님,,BadEnding,,  저기요. 아까부터 뭘 보는 거예요? 질문은 왜 이렇게 많…
+손님,,,,아니 잠깐, 지금 책상 밑에서 뭐 보고 있죠?
+주인공,,,,아앗…
+,,,,
+,,,,
+주인공,,,,…망했네.
+,,stop,fadeout,
+ ,,,,Try Again...
