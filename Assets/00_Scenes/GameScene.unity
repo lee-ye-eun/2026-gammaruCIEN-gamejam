@@ -1553,46 +1553,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1512005339}
-  - component: {fileID: 1512005337}
+  - component: {fileID: 1512005340}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: GameFlowManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1512005337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1512005336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 893dae782dc884b2dab4ce78364496ef, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  questionAskedCount: 0
-  clueFindCount: 0
-  suspicionLevel: 0
-  currentCustomerSuspicion: 0
-  currentState: 0
-  customerView: {fileID: 1953623664}
-  customers:
-  - {fileID: 11400000, guid: 043014ebb3cf84d10b9370647720ac5d, type: 2}
-  - {fileID: 11400000, guid: 08cb62037f4a3409781203e07e26c9ca, type: 2}
-  - {fileID: 11400000, guid: 7a66e4a5065b0bc43857933fd9aebbbb, type: 2}
-  - {fileID: 11400000, guid: 5d96b1a2a051ff849aff527201d32221, type: 2}
-  - {fileID: 11400000, guid: d7941134572dedd4c92618fe058a670c, type: 2}
-  dialoguePanel: {fileID: 775061171}
-  dialogueManager: {fileID: 775061173}
-  clueFindingPanel: {fileID: 1247184030}
-  clueFinder: {fileID: 1247184035}
-  cardDeckPanel: {fileID: 1319712255}
-  cardDeck: {fileID: 1319712257}
-  resultPanel: {fileID: 604251296}
-  resultManager: {fileID: 604251300}
 --- !u!4 &1512005339
 Transform:
   m_ObjectHideFlags: 0
@@ -1608,6 +1576,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1512005340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512005336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 722cd64f1338f48f08a11108db3ead55, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameFlowManager
+  currentState: 0
+  customerView: {fileID: 1953623664}
+  customers:
+  - {fileID: 11400000, guid: 043014ebb3cf84d10b9370647720ac5d, type: 2}
+  - {fileID: 11400000, guid: d7941134572dedd4c92618fe058a670c, type: 2}
+  - {fileID: 11400000, guid: 5d96b1a2a051ff849aff527201d32221, type: 2}
+  - {fileID: 11400000, guid: 08cb62037f4a3409781203e07e26c9ca, type: 2}
+  - {fileID: 11400000, guid: 7a66e4a5065b0bc43857933fd9aebbbb, type: 2}
+  dialoguePanel: {fileID: 775061171}
+  dialogueManager: {fileID: 775061173}
+  clueFindingPanel: {fileID: 1247184030}
+  clueFinder: {fileID: 1247184035}
+  cardDeckPanel: {fileID: 1319712255}
+  cardDeck: {fileID: 1319712257}
+  resultPanel: {fileID: 604251296}
+  resultManager: {fileID: 604251300}
 --- !u!1 &1528409748
 GameObject:
   m_ObjectHideFlags: 0
@@ -1840,6 +1836,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5505b936daf544c2bfb0b3843ef9540, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CustomerView
+--- !u!1001 &8753676378100138924
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1165.9181
+      objectReference: {fileID: 0}
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 334.06503
+      objectReference: {fileID: 0}
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 507072739951797974, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2509753061164146723, guid: bb36f61362d2840e08242df8898c5222, type: 3}
+      propertyPath: m_Name
+      value: GameManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bb36f61362d2840e08242df8898c5222, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1849,4 +1902,5 @@ SceneRoots:
   - {fileID: 776894022}
   - {fileID: 1551454342}
   - {fileID: 1512005339}
+  - {fileID: 8753676378100138924}
   - {fileID: 958512995}
