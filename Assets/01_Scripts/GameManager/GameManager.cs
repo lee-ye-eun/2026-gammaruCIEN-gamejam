@@ -172,18 +172,22 @@ public class GameManager : MonoBehaviour
     }
 
     // 단서 이미지 클릭 시(ClueFinder가 호출): 단서 찾기 패널 끄고 대사창에 단서 텍스트 출력. ClueFinding 상태는 그대로 유지.
+    // 다이얼로그 패널이 떠 있는 동안엔 단서 이미지가 호버/클릭되지 않도록 막는다.
     public void ShowClueText(string text)
     {
         if (clueFindingPanel != null) clueFindingPanel.SetActive(false);
         if (dialoguePanel != null) dialoguePanel.SetActive(true);
         if (dialogueManager != null) dialogueManager.ShowDialogue(text);
+        if (clueFinder != null) clueFinder.SetInteractable(false);
     }
 
     // 단서 텍스트를 보다가 화면 터치 시(DialogueManager가 호출): 단서 찾기 패널로 복귀. ClueFinding 상태는 그대로 유지.
+    // 다이얼로그 패널이 닫혔으니 단서 이미지를 다시 호버/클릭 가능하게 되돌린다.
     public void ReturnToClueFinding()
     {
         if (dialoguePanel != null) dialoguePanel.SetActive(false);
         if (clueFindingPanel != null) clueFindingPanel.SetActive(true);
+        if (clueFinder != null) clueFinder.SetInteractable(true);
     }
 
     private void EnterQuestioning()
