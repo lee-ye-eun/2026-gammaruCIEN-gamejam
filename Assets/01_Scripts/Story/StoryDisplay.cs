@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 // StoryScene에 배치. GameManager.Instance.LastStoryTrigger(왜 스토리로 넘어왔는지)를 보고
@@ -97,6 +96,6 @@ public class StoryDisplay : MonoBehaviour
     private void FinishStory()
     {
         if (currentStory == null || string.IsNullOrEmpty(currentStory.nextSceneName)) return;
-        SceneManager.LoadScene(currentStory.nextSceneName);
+        if (GameManager.Instance != null) GameManager.Instance.LoadSceneWithLoading(currentStory.nextSceneName);
     }
 }

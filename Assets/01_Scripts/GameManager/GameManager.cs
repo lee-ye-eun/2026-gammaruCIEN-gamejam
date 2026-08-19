@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     private const string StorySceneName = "StoryScene";
+    private const string LoadingSceneName = "LoadingScene";
     private const int SuspicionThreshold = 100;
 
     // StoryScene으로 넘어간 이유. StoryDisplay가 이 값을 보고 어떤 StoryData를 보여줄지 고른다.
@@ -15,6 +17,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private StoryTrigger lastStoryTrigger;
     public StoryTrigger LastStoryTrigger => lastStoryTrigger;
+
+    // LoadingScene을 거쳐 다음에 로드할 씬 이름. LoadingSceneController가 이 값을 읽어서 비동기로 로드한다.
+    private string pendingSceneName;
+    public string PendingSceneName => pendingSceneName;
 
     [Header("스탯")]
     [SerializeField] private int questionAskedCount; // 질문 횟수 (현재 손님 기준, 결과창에서 초기화)
@@ -76,6 +82,28 @@ public class GameManager : MonoBehaviour
     public void GoToStoryScene(StoryTrigger trigger)
     {
         lastStoryTrigger = trigger;
-        SceneManager.LoadScene(StorySceneName);
+        LoadSceneWithLoading(StorySceneName);
+    }
+
+    // LoadingScene을 먼저 띄우고, 그 안에서 targetSceneName을 비동기로 로드하게 한다.
+    public void LoadSceneWithLoading(string targetSceneName)
+    {
+        pendingSceneName = targetSceneName;
+        StartCoroutine(LoadLoadingSceneAsync());
+    }
+
+    // 이전 씬을 Additive로 로딩씬 "위에" 먼저 띄워서 화면에 보이게 한 다음, 그 이후에 이전 씬을 언로드한다.
+    // Single 모드로 바로 로드하면 이전 씬(스프라이트 등 리소스가 많은 씬)의 언로드가 로딩씬이 뜨기도 전에
+    // 동기적으로 일어나서, 로딩씬 진입 직전에 버벅이는 것처럼 보인다.
+    private IEnumerator LoadLoadingSceneAsync()
+    {
+        Scene previousScene = SceneManager.GetActiveScene();
+
+        yield return SceneManager.LoadSceneAsync(LoadingSceneName, LoadSceneMode.Additive);
+
+        Scene loadingScene = SceneManager.GetSceneByName(LoadingSceneName);
+        if (loadingScene.IsValid()) SceneManager.SetActiveScene(loadingScene);
+
+        yield return SceneManager.UnloadSceneAsync(previousScene);
     }
 }

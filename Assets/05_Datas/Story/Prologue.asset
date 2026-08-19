@@ -12,20 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 199a2b7c043ba43cc8ff6d0a10f56d12, type: 3}
   m_Name: Prologue
   m_EditorClassIdentifier: Assembly-CSharp::StoryData
-  images:
-  - {fileID: 21300000, guid: c75c28030b1684fe4bf4cb8257d1266b, type: 3}
-  - {fileID: 21300000, guid: f2a4ec76fbfea480a96a690543579648, type: 3}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   dialogueCsv: {fileID: 4900000, guid: 112efae1ff3f64c2f93977d08b7b66bf, type: 3}
+  imageEntries:
+  - key: one
+    sprite: {fileID: 21300000, guid: c75c28030b1684fe4bf4cb8257d1266b, type: 3}
+  - key: two
+    sprite: {fileID: 21300000, guid: f2a4ec76fbfea480a96a690543579648, type: 3}
+  - key: three
+    sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   nextSceneName: GameScene
-  bgm: {fileID: 8300000, guid: 4331f02a8945546c6a056c686084b687, type: 3}
