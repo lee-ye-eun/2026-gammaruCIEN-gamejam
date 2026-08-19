@@ -43,6 +43,7 @@ public class GameFlowManager : MonoBehaviour
     [Header("카드 덱")]
     [SerializeField] private GameObject cardDeckPanel; // CardDeck 컴포넌트가 붙어있는 오브젝트
     [SerializeField] private CardDeck cardDeck;
+    [SerializeField] private GameObject paperPanel; // 카드 선택 상태(CardSelecting)에서만 활성화
 
     [Header("결과창 (카드 결과 대사 다음, 매 손님마다 표시)")]
     [SerializeField] private GameObject resultPanel;
@@ -130,6 +131,7 @@ public class GameFlowManager : MonoBehaviour
         if (clueFindingPanel != null) clueFindingPanel.SetActive(clueFinding);
         if (cardDeckPanel != null) cardDeckPanel.SetActive(cardDeckOn);
         if (resultPanel != null) resultPanel.SetActive(result);
+        if (paperPanel != null) paperPanel.SetActive(cardDeckOn);
     }
 
     // 손님 목록에서 다음 손님을 꺼내 맵의 손님 프리팹에 새로 할당하고 관찰 대사를 출력.
