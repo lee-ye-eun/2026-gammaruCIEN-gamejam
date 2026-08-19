@@ -177,4 +177,18 @@ public class StoryDisplay : MonoBehaviour
         if (currentStory == null || string.IsNullOrEmpty(currentStory.nextSceneName)) return;
         if (GameManager.Instance != null) GameManager.Instance.LoadSceneWithLoading(currentStory.nextSceneName);
     }
+
+    // 스킵 버튼 onClick에 연결: 남은 컷을 건너뛰고 곧장 이 StoryData에 지정된 다음 씬으로 이동한다.
+    public void SkipStory()
+    {
+        isTouchActive = false;
+
+        if (fadeRoutine != null)
+        {
+            StopCoroutine(fadeRoutine);
+            fadeRoutine = null;
+        }
+
+        FinishStory();
+    }
 }

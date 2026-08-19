@@ -79,6 +79,14 @@ public class GameManager : MonoBehaviour
         currentCustomerSuspicion = 0;
     }
 
+    // Title 씬 도착 시 무조건 호출: 이전 플레이의 누적 스탯을 전부 초기화해 새 게임을 준비한다.
+    public void ResetToInitialState()
+    {
+        ResetRoundStats();
+        suspicionLevel = 0;
+        lastStoryTrigger = StoryTrigger.Prologue;
+    }
+
     public void GoToStoryScene(StoryTrigger trigger)
     {
         lastStoryTrigger = trigger;
