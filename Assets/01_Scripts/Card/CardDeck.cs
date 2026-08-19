@@ -27,6 +27,7 @@ public class CardDeck : MonoBehaviour
     [Header("연출")]
     [SerializeField] private float drawDuration = 0.22f;
     [SerializeField] private float drawInterval = 0.04f;
+    [SerializeField] private float mirrorPreviewFadeDuration = 0.18f;
     [SerializeField] private float flipDuration = 0.26f;
 
     [Header("사운드 키")]
@@ -209,6 +210,15 @@ public class CardDeck : MonoBehaviour
         }
 
         yield return new WaitForSeconds(drawDuration);
+
+        foreach (var card in cards)
+        {
+            if (card == null) continue;
+
+            card.RevealFrontPreviewAfterDraw(mirrorPreviewFadeDuration);
+        }
+
+        yield return new WaitForSeconds(mirrorPreviewFadeDuration);
 
         isDrawing = false;
         cardsDrawn = true;
