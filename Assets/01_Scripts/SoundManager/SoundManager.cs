@@ -71,7 +71,7 @@ public class SoundManager : MonoBehaviour
         return lookup;
     }
 
-    public void PlayBGM(AudioClip clip, bool loop = true, float volume = 1f)
+    public void PlayBGM(AudioClip clip, bool loop = true, float volume = 0.5f)
     {
         if (bgmSource == null || clip == null) return;
 
@@ -82,7 +82,7 @@ public class SoundManager : MonoBehaviour
     }
 
     // 미리 등록해둔 BGM을 key로 바로 재생
-    public void PlayBGM(string key, bool loop = true, float volume = 1f)
+    public void PlayBGM(string key, bool loop = true, float volume = 0.5f)
     {
         if (bgmLookup != null && bgmLookup.TryGetValue(key, out AudioClip clip))
         {

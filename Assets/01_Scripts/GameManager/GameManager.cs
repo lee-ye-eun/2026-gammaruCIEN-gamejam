@@ -3,6 +3,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [System.Serializable]
+    public struct QuestionLogEntry
+    {
+        public string question;
+        public string answer;
+    }
+
     [Header("스탯")]
     [SerializeField] private int questionAskedCount; // 질문 횟수 (현재 손님 기준, 결과창에서 초기화)
     [SerializeField] private int clueFindCount; // 단서 찾기 횟수 (현재 손님 기준, 결과창에서 초기화)
@@ -30,6 +37,10 @@ public class GameManager : MonoBehaviour
 
     private CustomerData currentCustomer;
     private int customerIndex = -1;
+    private readonly List<QuestionLogEntry> questionLogs = new List<QuestionLogEntry>();
+
+    public string CurrentWorryText => currentCustomer != null ? currentCustomer.Dialogue.worryText : string.Empty;
+    public IReadOnlyList<QuestionLogEntry> CurrentQuestionLogs => questionLogs;
 
     [Header("대화 (Observing / Questioning / ShowingCardResult 공용)")]
     [SerializeField] private GameObject dialoguePanel;
@@ -72,6 +83,9 @@ public class GameManager : MonoBehaviour
     {
         currentState = newState;
 
+        // 단서 찾기 상태일 때만 단서 이미지 호버/클릭이 가능하도록
+        if (clueFinder != null) clueFinder.SetInteractable(newState == GameState.ClueFinding);
+
         switch (newState)
         {
             case GameState.Observing:
@@ -108,6 +122,21 @@ public class GameManager : MonoBehaviour
         clueFindCount++;
     }
 
+    public void RegisterQuestionLog(string question, string answer)
+    {
+        if (string.IsNullOrWhiteSpace(question) && string.IsNullOrWhiteSpace(answer)) return;
+
+        for (int i = 0; i < questionLogs.Count; i++)
+        {
+            if (questionLogs[i].question != question) continue;
+
+            questionLogs[i] = new QuestionLogEntry { question = question, answer = answer };
+            return;
+        }
+
+        questionLogs.Add(new QuestionLogEntry { question = question, answer = answer });
+    }
+
     private void SetPanels(bool dialogue, bool clueFinding, bool cardDeckOn, bool result)
     {
         if (dialoguePanel != null) dialoguePanel.SetActive(dialogue);
@@ -129,6 +158,7 @@ public class GameManager : MonoBehaviour
         }
 
         currentCustomer = customers[customerIndex];
+        questionLogs.Clear();
         if (customerView != null) customerView.SetData(currentCustomer);
 
         SetPanels(dialogue: true, clueFinding: false, cardDeckOn: false, result: false);

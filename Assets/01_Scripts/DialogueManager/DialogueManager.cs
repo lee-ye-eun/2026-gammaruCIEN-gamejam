@@ -112,7 +112,11 @@ public class DialogueManager : MonoBehaviour
         if (dialogueText != null) dialogueText.text = questions[index].clueText;
         isTouchActive = true; // 터치하면 다시 질문창으로
 
-        if (GameManager.Instance != null) GameManager.Instance.IncrementQuestionAskedCount();
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.RegisterQuestionLog(questions[index].questionText, questions[index].clueText);
+            GameManager.Instance.IncrementQuestionAskedCount();
+        }
     }
 
     // 질문창의 "다음(질문 그만)" 버튼 onClick에 연결 -> 카드 덱으로 전환

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6573106982894364376}
   - component: {fileID: 1848052214529892246}
   - component: {fileID: 334337671777140797}
+  - component: {fileID: 1400387726632704708}
   m_Layer: 5
   m_Name: Clue1
   m_TagString: Untagged
@@ -35,8 +36,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 295.16327, y: 238.48376}
-  m_SizeDelta: {x: 180.7714, y: 187.2696}
+  m_AnchoredPosition: {x: 178, y: 203.27}
+  m_SizeDelta: {x: 180.77136, y: 187.2696}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6573106982894364376
 CanvasRenderer:
@@ -58,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 2c3a18de325e943bcb9861f475957c2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -95,7 +96,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -120,6 +121,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1400387726632704708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1264182494642743209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2bd3c6a653114d4580c02a502595863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverOutline
+  outlineColor: {r: 0.77461636, g: 0.43454075, b: 0.8773585, a: 1}
+  outlineWidth: 8
+  fadeDuration: 0.12
 --- !u!1 &1452126615938644935
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,6 +148,7 @@ GameObject:
   - component: {fileID: 4685043762078491166}
   - component: {fileID: 9052745625466652532}
   - component: {fileID: 3061295174032353598}
+  - component: {fileID: 5316048773408144311}
   m_Layer: 5
   m_Name: Clue2
   m_TagString: Untagged
@@ -155,8 +172,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -319, y: 16}
-  m_SizeDelta: {x: 180.7714, y: 187.2696}
+  m_AnchoredPosition: {x: -154, y: 43.27}
+  m_SizeDelta: {x: 180.77136, y: 187.2696}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4685043762078491166
 CanvasRenderer:
@@ -178,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 2c3a18de325e943bcb9861f475957c2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -215,7 +232,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -240,6 +257,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5316048773408144311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452126615938644935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2bd3c6a653114d4580c02a502595863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverOutline
+  outlineColor: {r: 0.77461636, g: 0.43454075, b: 0.8773585, a: 1}
+  outlineWidth: 8
+  fadeDuration: 0.12
 --- !u!1 &3344260847072264441
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,6 +284,7 @@ GameObject:
   - component: {fileID: 8931363079480147561}
   - component: {fileID: 4591981175026066497}
   - component: {fileID: 5743068720803894715}
+  - component: {fileID: 8198868409997282278}
   m_Layer: 5
   m_Name: Clue3
   m_TagString: Untagged
@@ -275,8 +308,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 313, y: -144}
-  m_SizeDelta: {x: 180.7714, y: 187.2696}
+  m_AnchoredPosition: {x: 222, y: -144}
+  m_SizeDelta: {x: 180.77136, y: 187.2696}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8931363079480147561
 CanvasRenderer:
@@ -298,7 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 2c3a18de325e943bcb9861f475957c2a, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -335,7 +368,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -360,6 +393,21 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8198868409997282278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3344260847072264441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2bd3c6a653114d4580c02a502595863, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HoverOutline
+  outlineColor: {r: 0.77461636, g: 0.43454075, b: 0.8773585, a: 1}
+  outlineWidth: 8
+  fadeDuration: 0.12
 --- !u!1 &5757727396816207542
 GameObject:
   m_ObjectHideFlags: 0
