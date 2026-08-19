@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: Hermit
   cardName: "\uC740\uB454\uC790"
-  symbol: {fileID: 0}
+  symbol: {fileID: 21300000, guid: 5cbd08683e2de334dbdc76f5a1210736, type: 3}
   keywords:
   - "\uAE30\uB2E4\uB9BC"
   description: 

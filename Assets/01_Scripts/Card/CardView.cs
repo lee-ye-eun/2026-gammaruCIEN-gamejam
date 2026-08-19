@@ -30,8 +30,8 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private Image previewSymbolImage;
     [SerializeField] private TMP_Text previewNameText;
     [SerializeField] private TMP_Text previewKeywordText;
-    [SerializeField] private float frontPreviewCollapsedY = -44f;
-    [SerializeField] private float frontPreviewExpandedY = -174f;
+    [SerializeField] private float frontPreviewCollapsedY;
+    [SerializeField] private float frontPreviewExpandedY = -116f;
     [SerializeField] private float frontPreviewSlideDuration = 0.16f;
 
     [Header("연출")]
@@ -56,6 +56,8 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private bool isDragging;
     private bool ignoreNextClick;
     private Coroutine frontPreviewRoutine;
+    private float frontPreviewBaseY;
+    private bool frontPreviewBaseCached;
 
     private void Awake()
     {
@@ -78,6 +80,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void OnEnable()
     {
         EnsureReferences();
+        CacheFrontPreviewBaseY();
         Refresh();
         UpdateFrontPreviewState(true);
     }
@@ -91,6 +94,11 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
 
         isDragging = false;
+    }
+
+    private void OnValidate()
+    {
+        Refresh();
     }
 
     public void SetData(CardData newData)
@@ -350,7 +358,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (!CanShowFrontPreview()) return;
 
-        float targetY = expanded ? frontPreviewExpandedY : frontPreviewCollapsedY;
+        float targetY = GetFrontPreviewTargetY(expanded);
 
         if (frontPreviewRoutine != null)
         {
@@ -391,8 +399,22 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         if (frontPreviewCard != null && instant)
         {
-            frontPreviewCard.anchoredPosition = new Vector2(frontPreviewCard.anchoredPosition.x, frontPreviewCollapsedY);
+            frontPreviewCard.anchoredPosition = new Vector2(frontPreviewCard.anchoredPosition.x, GetFrontPreviewTargetY(false));
         }
+    }
+
+    private float GetFrontPreviewTargetY(bool expanded)
+    {
+        CacheFrontPreviewBaseY();
+        return frontPreviewBaseY + (expanded ? frontPreviewExpandedY : frontPreviewCollapsedY);
+    }
+
+    private void CacheFrontPreviewBaseY()
+    {
+        if (frontPreviewBaseCached || frontPreviewCard == null) return;
+
+        frontPreviewBaseY = frontPreviewCard.anchoredPosition.y;
+        frontPreviewBaseCached = true;
     }
 
     private bool CanShowFrontPreview()

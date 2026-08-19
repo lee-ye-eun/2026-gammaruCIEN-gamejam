@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   cardId: Devil
   cardName: "\uC545\uB9C8"
-  symbol: {fileID: 0}
+  symbol: {fileID: 21300000, guid: 5cdd4c17110b65946b895427ed6f20fa, type: 3}
   keywords:
   - "\uC9D1\uCC29"
   description: 
