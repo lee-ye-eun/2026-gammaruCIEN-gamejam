@@ -4,8 +4,8 @@ using UnityEngine.InputSystem;
 using TMPro;
 
 // 대사창/질문창(다이얼로그 패널의 두 자식) 출력 + 화면 터치 감지를 담당.
-// 다이얼로그 패널 자체의 활성 상태는 GameManager가 관리하지만, 그 안에서 대사창/질문창 중 뭘 보여줄지는 여기서 결정한다.
-// 흐름 전환은 이벤트가 아니라 GameManager.Instance.ChangeState(...)를 직접 호출해서 처리한다.
+// 다이얼로그 패널 자체의 활성 상태는 GameFlowManager가 관리하지만, 그 안에서 대사창/질문창 중 뭘 보여줄지는 여기서 결정한다.
+// 흐름 전환은 이벤트가 아니라 GameFlowManager.Instance.ChangeState(...)를 직접 호출해서 처리한다.
 // 질문창의 "다음(질문 그만)" 버튼은 인스펙터에서 이 컴포넌트의 FinishQuestioning()을 참조하도록 연결한다.
 public class DialogueManager : MonoBehaviour
 {
@@ -112,11 +112,11 @@ public class DialogueManager : MonoBehaviour
         if (dialogueText != null) dialogueText.text = questions[index].clueText;
         isTouchActive = true; // 터치하면 다시 질문창으로
 
-        if (GameManager.Instance != null)
+        if (GameFlowManager.Instance != null)
         {
-            GameManager.Instance.RegisterQuestionLog(questions[index].questionText, questions[index].clueText);
-            GameManager.Instance.IncrementQuestionAskedCount();
+            GameFlowManager.Instance.RegisterQuestionLog(questions[index].questionText, questions[index].clueText);
         }
+        if (GameManager.Instance != null) GameManager.Instance.IncrementQuestionAskedCount();
     }
 
     // 질문창의 "다음(질문 그만)" 버튼 onClick에 연결 -> 카드 덱으로 전환
@@ -125,7 +125,7 @@ public class DialogueManager : MonoBehaviour
         if (mode != Mode.SelectingQuestion) return;
 
         isTouchActive = false;
-        if (GameManager.Instance != null) GameManager.Instance.ChangeState(GameManager.GameState.CardSelecting);
+        if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.CardSelecting);
     }
 
     private void AdvanceTouch()
@@ -134,27 +134,27 @@ public class DialogueManager : MonoBehaviour
 
         if (mode == Mode.ShowingAnswer)
         {
-            // 질문 차례 중 답변을 봤다면 다시 질문 선택으로 돌아간다 (GameManager 상태는 그대로 Questioning 유지)
+            // 질문 차례 중 답변을 봤다면 다시 질문 선택으로 돌아간다 (흐름 상태는 그대로 Questioning 유지)
             mode = Mode.SelectingQuestion;
             SetBoxes(dialogueOn: false, questionOn: true);
             return;
         }
 
         // 일반 대사(관찰 -> 단서 찾기, 카드 결과 -> 결과창) 넘김
-        if (GameManager.Instance == null) return;
+        if (GameFlowManager.Instance == null) return;
 
-        if (GameManager.Instance.CurrentState == GameManager.GameState.Observing)
+        if (GameFlowManager.Instance.CurrentState == GameFlowManager.GameState.Observing)
         {
-            GameManager.Instance.ChangeState(GameManager.GameState.ClueFinding);
+            GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.ClueFinding);
         }
-        else if (GameManager.Instance.CurrentState == GameManager.GameState.ClueFinding)
+        else if (GameFlowManager.Instance.CurrentState == GameFlowManager.GameState.ClueFinding)
         {
             // 단서 텍스트를 보다가 터치하면 단서 찾기 화면으로 복귀 (ClueFinding 상태는 그대로 유지)
-            GameManager.Instance.ReturnToClueFinding();
+            GameFlowManager.Instance.ReturnToClueFinding();
         }
-        else if (GameManager.Instance.CurrentState == GameManager.GameState.ShowingCardResult)
+        else if (GameFlowManager.Instance.CurrentState == GameFlowManager.GameState.ShowingCardResult)
         {
-            GameManager.Instance.ChangeState(GameManager.GameState.ShowingResultPanel);
+            GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.ShowingResultPanel);
         }
     }
 }

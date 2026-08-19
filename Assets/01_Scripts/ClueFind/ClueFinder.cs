@@ -44,14 +44,14 @@ public class ClueFinder : MonoBehaviour
         }
     }
 
-    // GameManager가 단서 찾기 화면 진입 시 호출: 지금 손님의 단서 데이터를 기억해둔다
+    // GameFlowManager가 단서 찾기 화면 진입 시 호출: 지금 손님의 단서 데이터를 기억해둔다
     public void ShowClues(CustomerData customer)
     {
         currentCustomer = customer;
         HideClueZoom();
     }
 
-    // 단서 찾기 상태가 아닐 때 GameManager가 호출: 클릭(interactable)과 호버(raycastTarget) 둘 다 막는다
+    // 단서 찾기 상태가 아닐 때 GameFlowManager가 호출: 클릭(interactable)과 호버(raycastTarget) 둘 다 막는다
     public void SetInteractable(bool enabled)
     {
         isInteractable = enabled;
@@ -116,12 +116,8 @@ public class ClueFinder : MonoBehaviour
         var clues = currentCustomer != null ? currentCustomer.Dialogue.clues : null;
         string clueText = clues != null && index >= 0 && index < clues.Count ? clues[index] : string.Empty;
 
+        if (GameManager.Instance != null) GameManager.Instance.IncrementClueFindCount();
         ShowClueZoom(index, clueText);
-
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.IncrementClueFindCount();
-        }
     }
 
     private void ShowClueZoom(int index, string clueText)
@@ -181,6 +177,6 @@ public class ClueFinder : MonoBehaviour
     // 단서 찾기 화면의 "다음(질문하기로)" 버튼 onClick에 연결
     public void ConfirmClueFinding()
     {
-        if (GameManager.Instance != null) GameManager.Instance.ChangeState(GameManager.GameState.Questioning);
+        if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.Questioning);
     }
 }

@@ -73,7 +73,7 @@ public class CardDeck : MonoBehaviour
         }
     }
 
-    // 손님이 바뀔 때마다 GameManager가 호출한다.
+    // 손님이 바뀔 때마다 GameFlowManager가 호출한다.
     public void PrepareForNewRound()
     {
         StopAllCoroutines();
@@ -231,9 +231,9 @@ public class CardDeck : MonoBehaviour
 
         yield return new WaitForSeconds(0.25f);
 
-        if (GameManager.Instance != null)
+        if (GameFlowManager.Instance != null)
         {
-            GameManager.Instance.ChangeState(GameManager.GameState.ShowingCardResult);
+            GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.ShowingCardResult);
         }
     }
 

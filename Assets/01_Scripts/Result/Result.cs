@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using TMPro;
 
 // 결과창(카드 결과 대사 다음, 매 손님마다 표시) 텍스트 출력 + 화면 터치 감지 담당.
-// 결과 패널의 활성 상태는 GameManager가 관리. 터치 시 GameManager.Instance.ChangeState(Observing)을 직접 호출한다.
+// 결과 패널의 활성 상태는 GameFlowManager가 관리. 터치 시 GameFlowManager.Instance.ChangeState(Observing)을 직접 호출한다.
 
 public class Result : MonoBehaviour
 {
@@ -30,6 +30,6 @@ public class Result : MonoBehaviour
     private void AdvanceTouch()
     {
         isTouchActive = false; // 중복 트리거 방지
-        if (GameManager.Instance != null) GameManager.Instance.ChangeState(GameManager.GameState.Observing);
+        if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.Observing);
     }
 }

@@ -81,9 +81,9 @@ public class ClueLogController : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     private void RefreshLogText()
     {
-        GameManager gameManager = GameManager.Instance;
-        string worry = gameManager != null ? gameManager.CurrentWorryText : string.Empty;
-        IReadOnlyList<GameManager.QuestionLogEntry> logs = gameManager != null ? gameManager.CurrentQuestionLogs : null;
+        GameFlowManager gameFlowManager = GameFlowManager.Instance;
+        string worry = gameFlowManager != null ? gameFlowManager.CurrentWorryText : string.Empty;
+        IReadOnlyList<GameFlowManager.QuestionLogEntry> logs = gameFlowManager != null ? gameFlowManager.CurrentQuestionLogs : null;
 
         if (worryText != null)
         {
@@ -103,7 +103,7 @@ public class ClueLogController : MonoBehaviour, IPointerEnterHandler, IPointerEx
         var builder = new StringBuilder();
         for (int i = 0; i < logs.Count; i++)
         {
-            GameManager.QuestionLogEntry entry = logs[i];
+            GameFlowManager.QuestionLogEntry entry = logs[i];
             if (string.IsNullOrWhiteSpace(entry.question) && string.IsNullOrWhiteSpace(entry.answer)) continue;
 
             builder.Append("Q. ");
