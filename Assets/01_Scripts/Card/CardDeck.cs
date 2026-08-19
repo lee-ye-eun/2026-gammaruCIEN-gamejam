@@ -29,9 +29,14 @@ public class CardDeck : MonoBehaviour
     [SerializeField] private float drawInterval = 0.04f;
     [SerializeField] private float flipDuration = 0.26f;
 
+    [Header("사운드 키")]
+    [SerializeField] private string cardDrawSfxKey = "cardDraw";
+    [SerializeField] private string cardFlipSfxKey = "cardFlip";
+
     private readonly List<CardView> cards = new List<CardView>();
     private Canvas parentCanvas;
     private bool cardsDrawn;
+    private bool isDrawing;
     private bool isResolving;
 
     public IReadOnlyList<CardView> SelectedCards => selectionSlots
@@ -43,7 +48,7 @@ public class CardDeck : MonoBehaviour
     public Camera UICamera => parentCanvas != null && parentCanvas.renderMode != RenderMode.ScreenSpaceOverlay
         ? parentCanvas.worldCamera
         : null;
-    public bool CanInteractWithCards => cardsDrawn && !isResolving;
+    public bool CanInteractWithCards => cardsDrawn && !isDrawing && !isResolving;
 
     private void Awake()
     {
@@ -54,7 +59,7 @@ public class CardDeck : MonoBehaviour
         if (drawButton != null) drawButton.onClick.AddListener(DrawCards);
         if (nextButton != null) nextButton.onClick.AddListener(ConfirmSelection);
 
-        UpdateNextButton();
+        UpdateActionButtons();
     }
 
     private void OnDestroy()
@@ -72,6 +77,7 @@ public class CardDeck : MonoBehaviour
     public void PrepareForNewRound()
     {
         StopAllCoroutines();
+        isDrawing = false;
         isResolving = false;
         cardsDrawn = false;
 
@@ -89,18 +95,12 @@ public class CardDeck : MonoBehaviour
         }
 
         if (stackVisual != null) stackVisual.SetActive(true);
-        if (drawButton != null)
-        {
-            drawButton.gameObject.SetActive(true);
-            drawButton.interactable = cards.Count > 0;
-        }
-
-        UpdateNextButton();
+        UpdateActionButtons();
     }
 
     public void DrawCards()
     {
-        if (cardsDrawn || isResolving || cards.Count == 0) return;
+        if (cardsDrawn || isDrawing || isResolving || cards.Count == 0) return;
 
         StartCoroutine(DrawCardsRoutine());
     }
@@ -126,7 +126,7 @@ public class CardDeck : MonoBehaviour
 
         targetSlot.SetCard(card);
         card.MoveToSlot(targetSlot);
-        UpdateNextButton();
+        UpdateActionButtons();
         return true;
     }
 
@@ -141,7 +141,7 @@ public class CardDeck : MonoBehaviour
         }
 
         card.ReturnToDeckHome();
-        UpdateNextButton();
+        UpdateActionButtons();
     }
 
     public void ResetSelection()
@@ -166,7 +166,7 @@ public class CardDeck : MonoBehaviour
             card.ReturnToDeckHome(false);
         }
 
-        UpdateNextButton();
+        UpdateActionButtons();
     }
 
     // 선택 결정 버튼 onClick에 연결된다. 원인-현재-조언 순서로 카드를 뒤집은 뒤 기존 결과 상태로 넘긴다.
@@ -190,11 +190,12 @@ public class CardDeck : MonoBehaviour
 
     private IEnumerator DrawCardsRoutine()
     {
-        cardsDrawn = true;
-        UpdateNextButton();
+        isDrawing = true;
+        cardsDrawn = false;
+        UpdateActionButtons();
 
-        if (drawButton != null) drawButton.interactable = false;
         if (stackVisual != null) stackVisual.SetActive(false);
+        PlaySfx(cardDrawSfxKey);
 
         Vector2 pilePosition = stackPoint != null ? stackPoint.anchoredPosition : Vector2.zero;
 
@@ -209,18 +210,21 @@ public class CardDeck : MonoBehaviour
 
         yield return new WaitForSeconds(drawDuration);
 
-        if (drawButton != null) drawButton.gameObject.SetActive(false);
+        isDrawing = false;
+        cardsDrawn = true;
+        UpdateActionButtons();
     }
 
     private IEnumerator ConfirmSelectionRoutine()
     {
         isResolving = true;
-        UpdateNextButton();
+        UpdateActionButtons();
 
         foreach (var card in SelectedCards)
         {
             if (card == null) continue;
 
+            PlaySfx(cardFlipSfxKey);
             yield return card.FlipFaceUp(flipDuration);
             yield return new WaitForSeconds(0.1f);
         }
@@ -298,11 +302,28 @@ public class CardDeck : MonoBehaviour
         }
     }
 
-    private void UpdateNextButton()
+    private void UpdateActionButtons()
     {
-        if (nextButton == null) return;
+        if (drawButton != null)
+        {
+            bool showDrawButton = !cardsDrawn && !isResolving;
+            drawButton.gameObject.SetActive(showDrawButton);
+            drawButton.interactable = showDrawButton && !isDrawing && cards.Count > 0;
+        }
 
-        nextButton.interactable = cardsDrawn && !isResolving && SelectedCards.Count == MaxSelectable;
+        if (nextButton != null)
+        {
+            bool showNextButton = cardsDrawn || isResolving;
+            nextButton.gameObject.SetActive(showNextButton);
+            nextButton.interactable = showNextButton && !isResolving && SelectedCards.Count == MaxSelectable;
+        }
+    }
+
+    private static void PlaySfx(string key)
+    {
+        if (string.IsNullOrEmpty(key) || SoundManager.Instance == null) return;
+
+        SoundManager.Instance.PlaySFX(key);
     }
 
     private bool IsSlotMatching(int index, CardData answer)
