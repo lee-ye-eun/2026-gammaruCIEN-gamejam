@@ -9,6 +9,12 @@ public class TitleController : MonoBehaviour
         if (GameManager.Instance != null) GameManager.Instance.ResetToInitialState();
     }
 
+    // Title 씬에 도착하면 무조건 메인 BGM을 재생한다.
+    private void Start()
+    {
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayBGM("MainBGM");
+    }
+
     // "시작하기" 버튼 onClick에 연결 -> 프롤로그 스토리로 이동 (LoadingScene을 거쳐 비동기로 로드됨)
     public void StartGame()
     {
