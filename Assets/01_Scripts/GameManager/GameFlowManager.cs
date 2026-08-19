@@ -15,7 +15,8 @@ public class GameFlowManager : MonoBehaviour
     }
 
     // GameScene 내부 흐름 상태. 버튼/터치는 ChangeState(원하는 상태)를 직접 호출해서 전환한다.
-    public enum GameState { Observing, ClueFinding, Questioning, CardSelecting, ShowingCardResult, ShowingResultPanel }
+    // CardSelecting: 질문 패널과 카드덱 패널이 동시에 활성화되는 상태. 카드를 고르는 동안 언제든 질문할 수 있다.
+    public enum GameState { Observing, ClueFinding, CardSelecting, ShowingCardResult, ShowingResultPanel }
 
     [SerializeField] private GameState currentState = GameState.Observing;
     public GameState CurrentState => currentState;
@@ -31,7 +32,7 @@ public class GameFlowManager : MonoBehaviour
     public string CurrentWorryText => currentCustomer != null ? currentCustomer.Dialogue.worryText : string.Empty;
     public IReadOnlyList<QuestionLogEntry> CurrentQuestionLogs => questionLogs;
 
-    [Header("대화 (Observing / Questioning / ShowingCardResult 공용)")]
+    [Header("대화 (Observing / CardSelecting의 질문 답변 / ShowingCardResult 공용)")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private DialogueManager dialogueManager;
 
@@ -93,10 +94,6 @@ public class GameFlowManager : MonoBehaviour
                 PlaySfx("chhhhhik");
                 EnterClueFinding();
                 break;
-            case GameState.Questioning:
-                PlaySfx("chhhhhik");
-                EnterQuestioning();
-                break;
             case GameState.CardSelecting:
                 PlaySfx("chhhhhik");
                 EnterCardSelecting();
@@ -136,30 +133,23 @@ public class GameFlowManager : MonoBehaviour
     }
 
     // 손님 목록에서 다음 손님을 꺼내 맵의 손님 프리팹에 새로 할당하고 관찰 대사를 출력.
-    // 더 이상 손님이 없거나 의심도가 임계치를 넘었으면 GameManager에 위임해 스토리 씬으로 이동.
+    // 더 이상 손님이 없으면 GameManager에 위임해 스토리 씬으로 이동한다.
+    // (의심도 임계치 초과는 더 이상 여기서 확인하지 않는다 - GameManager.AddSuspicion()이 임계치를 넘는 즉시 스토리 씬으로 보낸다.)
     private void EnterObserving()
     {
         customerIndex++;
 
         bool noMoreCustomers = customers == null || customerIndex >= customers.Count;
-        bool suspicionExceeded = GameManager.Instance != null && GameManager.Instance.IsSuspicionThresholdReached;
-
-        if (noMoreCustomers || suspicionExceeded)
+        if (noMoreCustomers)
         {
-            if (GameManager.Instance != null)
-            {
-                var trigger = suspicionExceeded ? GameManager.StoryTrigger.HighSuspicion : GameManager.StoryTrigger.CustomersExhausted;
-                GameManager.Instance.GoToStoryScene(trigger);
-            }
+            if (GameManager.Instance != null) GameManager.Instance.GoToStoryScene(GameManager.StoryTrigger.CustomersExhausted);
             return;
         }
 
         currentCustomer = customers[customerIndex];
         questionLogs.Clear();
         if (customerView != null) customerView.SetData(currentCustomer);
-        // 새 라운드 시작: 카드덱을 여기서 한 번만 리셋해둔다. EnterCardSelecting()은 이 라운드 안에서 몇 번을
-        // 다시 들어오든(질문하기로 돌아갔다 오든) cardDeck.CardsDrawn을 보고 재준비 여부를 판단하므로,
-        // 라운드 경계가 되는 시점(=여기)에서만 리셋해야 다음 손님으로 넘어가도 다시 뽑힌다.
+        // 새 라운드 시작: 카드덱을 여기서 한 번만 리셋해둔다 (라운드당 CardSelecting은 한 번만 진입하므로 충분).
         if (cardDeck != null) cardDeck.PrepareForNewRound();
 
         SetPanels(dialogue: true, clueFinding: false, cardDeckOn: false, result: false);
@@ -191,40 +181,24 @@ public class GameFlowManager : MonoBehaviour
         if (clueFinder != null) clueFinder.SetInteractable(true);
     }
 
-    private void EnterQuestioning()
-    {
-        SetPanels(dialogue: true, clueFinding: false, cardDeckOn: false, result: false);
-        if (dialogueManager != null) dialogueManager.ShowQuestionTurn(currentCustomer);
-    }
-
-    // 질문 답변을 하나 보거나(자동) "질문 그만" 버튼으로 카드 덱에 처음 넘어올 때: 질문 횟수에 따라 현재 손님
-    // 의심도에 보너스를 더하고 카드를 뽑는다. 이후 "질문하기" 버튼으로 다시 질문했다가 돌아오는 경우엔
-    // 이미 뽑혀 있으므로(cardDeck.CardsDrawn) 보너스 없이 패널만 다시 보여준다.
-    // 카드덱 자체의 리셋(PrepareForNewRound)은 라운드 시작 시점인 EnterObserving()에서 한 번만 한다.
+    // 단서 찾기 다음 진입점. 질문 패널과 카드덱 패널을 동시에 켜서, 카드를 고르는 동안 언제든 질문할 수 있게 한다.
+    // 라운드당 한 번만 진입하므로 카드는 여기서 바로 뽑는다 (재준비는 라운드 시작 시점인 EnterObserving()이 담당).
     private void EnterCardSelecting()
     {
-        bool alreadyDrawn = cardDeck != null && cardDeck.CardsDrawn;
-
-        if (!alreadyDrawn && GameManager.Instance != null)
-        {
-            int askedCount = GameManager.Instance.QuestionAskedCount;
-            if (askedCount == 2) GameManager.Instance.AddCurrentCustomerSuspicion(5);
-            else if (askedCount == 3) GameManager.Instance.AddCurrentCustomerSuspicion(10);
-            else if (askedCount >= 4) GameManager.Instance.AddCurrentCustomerSuspicion(20);
-        }
-
-        SetPanels(dialogue: false, clueFinding: false, cardDeckOn: true, result: false);
+        SetPanels(dialogue: true, clueFinding: false, cardDeckOn: true, result: false);
+        if (dialogueManager != null) dialogueManager.ShowQuestionTurn(currentCustomer);
         if (cardDeck != null) cardDeck.DrawCards();
     }
 
-    // 카드 제출 후 결과 대사 출력. 오답 개수에 따라 현재 손님 의심도를 가감한다.
+    // 카드 제출 후 결과 대사 출력. 맞춘 카드 개수에 따른 의심도 가감만 반영한다.
+    // (질문에 따른 의심도는 더 이상 여기서 정산하지 않는다 - GameManager.IncrementQuestionAskedCount()에서 질문할 때마다 즉시 반영됨)
     private void EnterShowingCardResult()
     {
         SetPanels(dialogue: true, clueFinding: false, cardDeckOn: false, result: false);
 
         int matchCount = cardDeck != null && currentCustomer != null ? cardDeck.CountCorrectSlots(currentCustomer) : 0;
         int wrongCount = 3 - matchCount;
-        if (GameManager.Instance != null) GameManager.Instance.AddCurrentCustomerSuspicion(GetCardResultSuspicionDelta(wrongCount));
+        if (GameManager.Instance != null) GameManager.Instance.AddSuspicion(GetCardResultSuspicionDelta(wrongCount));
 
         string reaction = currentCustomer != null ? currentCustomer.GetReaction(matchCount) : string.Empty;
         if (dialogueManager != null) dialogueManager.ShowDialogue(reaction);
@@ -242,17 +216,15 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    // 결과창: 전체 의심도에 현재 손님 의심도를 반영하고 텍스트로 출력한 뒤, 다음 손님을 위해 라운드 스탯을 초기화한다.
-    // 터치하면 다음 손님으로 넘어감(ResultManager가 처리)
+    // 결과창: 이번 라운드 동안 오른 의심도(질문+카드 결과, 이미 전체 의심도에 실시간으로 반영되어 있음)를
+    // 문구로 안내하고, 다음 손님을 위해 라운드 스탯을 초기화한다. 터치하면 다음 손님으로 넘어감(ResultManager가 처리)
     private void EnterShowingResultPanel()
     {
         SetPanels(dialogue: false, clueFinding: false, cardDeckOn: false, result: true);
 
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.CommitCurrentCustomerSuspicion();
-
-            string text = $"손님의 의심도: {GameManager.Instance.CurrentCustomerSuspicion}\n전체의심도: {GameManager.Instance.SuspicionLevel}";
+            string text = $"의심도가 {GameManager.Instance.CurrentCustomerSuspicion}만큼 증가했습니다.";
             if (resultManager != null) resultManager.ShowResult(text);
 
             GameManager.Instance.ResetRoundStats();

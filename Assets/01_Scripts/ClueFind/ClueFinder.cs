@@ -178,9 +178,10 @@ public class ClueFinder : MonoBehaviour
         }
     }
 
-    // 단서 찾기 화면의 "다음(질문하기로)" 버튼 onClick에 연결
+    // 단서 찾기 화면의 "다음(질문하기로)" 버튼 onClick에 연결 -> 카드 선택 상태로. 이 상태부터는 질문 패널과
+    // 카드덱 패널이 동시에 활성화되어 카드를 고르면서 언제든 질문할 수 있다.
     public void ConfirmClueFinding()
     {
-        if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.Questioning);
+        if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.CardSelecting);
     }
 }

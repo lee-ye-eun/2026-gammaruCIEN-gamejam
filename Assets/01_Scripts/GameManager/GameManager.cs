@@ -50,9 +50,11 @@ public class GameManager : MonoBehaviour
         if (Instance == this) Instance = null;
     }
 
+    // 질문할 때마다 몇 번째 질문인지에 따라 의심도가 즉시 오른다: 1회차는 없음, 2~3회차는 +5, 4회차부터는 +10.
     public void IncrementQuestionAskedCount()
     {
         questionAskedCount++;
+        AddSuspicion(GetQuestionSuspicionDelta(questionAskedCount));
     }
 
     public void IncrementClueFindCount()
@@ -60,16 +62,27 @@ public class GameManager : MonoBehaviour
         clueFindCount++;
     }
 
-    // 의심도는 음수로 내려가지 않는다 (0이 최솟값). 예: 15에서 -30 -> 0, 이후 +25 -> 25.
-    public void AddCurrentCustomerSuspicion(int amount)
+    // 의심도 증감은 즉시 현재 손님 의심도와 전체 의심도 양쪽에 반영한다. 둘 다 음수로 내려가지 않는다(0이 최솟값).
+    // 예: 15에서 -30 -> 0, 이후 +25 -> 25.
+    // 전체 의심도가 임계치를 처음 넘는 그 순간 곧장 스토리 씬으로 이동한다 (여러 번 다시 넘지 않도록 이 프레임에만 발동).
+    public void AddSuspicion(int amount)
     {
+        bool wasBelowThreshold = suspicionLevel < SuspicionThreshold;
+
         currentCustomerSuspicion = Mathf.Max(0, currentCustomerSuspicion + amount);
+        suspicionLevel = Mathf.Max(0, suspicionLevel + amount);
+
+        if (wasBelowThreshold && IsSuspicionThresholdReached)
+        {
+            GoToStoryScene(StoryTrigger.HighSuspicion);
+        }
     }
 
-    // 현재 손님 의심도를 전체 의심도에 반영한다 (currentCustomerSuspicion 자체는 아직 초기화하지 않음 - 결과창 텍스트에서 필요)
-    public void CommitCurrentCustomerSuspicion()
+    private static int GetQuestionSuspicionDelta(int questionNumber)
     {
-        suspicionLevel = Mathf.Max(0, suspicionLevel + currentCustomerSuspicion);
+        if (questionNumber <= 1) return 0;
+        if (questionNumber <= 3) return 5;
+        return 10;
     }
 
     // 다음 손님으로 넘어가기 전, 이번 라운드에서 쓴 스탯을 전부 초기화
