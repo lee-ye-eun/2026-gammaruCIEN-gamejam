@@ -60,6 +60,10 @@ public class CardDeck : MonoBehaviour
         : null;
     public bool CanInteractWithCards => cardsDrawn && !isDrawing && !isResolving;
 
+    // 플레이어에게 카드 뒷면이 실제로 보이고 있는지. 투시경을 켜면 앞면이 보이므로 false,
+    // 카드를 아직 안 뽑았거나 제출 후 뒤집는 중(isResolving)이어도 false.
+    public bool AreCardBacksVisible => cardsDrawn && !isResolving && !xRayActive;
+
     private void Awake()
     {
         parentCanvas = GetComponentInParent<Canvas>();

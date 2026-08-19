@@ -26,6 +26,7 @@ MonoBehaviour:
     \uC0AC\uC774\uC774\uBBC0\uB85C \uC131\uAE09\uD558\uAC8C \uACE0\uBC31\uD558\uC9C0
     \uC54A\uC544\uC57C \uD55C\uB2E4."
   portrait: {fileID: 0}
+  background: {fileID: 2800000, guid: 69be5a915fc3a443c80dfe4c5fdb5d61, type: 3}
   dialogueCsv: {fileID: 4900000, guid: ff11d2e990bad6f41b193f470683f25f, type: 3}
   causeCard: {fileID: 11400000, guid: 552e233c27ba8448088038b68babb595, type: 2}
   presentCard: {fileID: 11400000, guid: be672a521513049a9a29d6fa0bd7b42b, type: 2}

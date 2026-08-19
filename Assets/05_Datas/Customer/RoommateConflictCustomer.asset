@@ -23,6 +23,7 @@ MonoBehaviour:
     \uC911\uC774\uB2E4. \uD53C\uD558\uC9C0 \uB9D0\uACE0 \uB300\uD654\uD574\uC57C
     \uD55C\uB2E4."
   portrait: {fileID: 0}
+  background: {fileID: 2800000, guid: 00b4e88f470344a20be57bea28b65906, type: 3}
   dialogueCsv: {fileID: 4900000, guid: 8cda3a953f5c4da42aa23180f93b5658, type: 3}
   causeCard: {fileID: 11400000, guid: be672a521513049a9a29d6fa0bd7b42b, type: 2}
   presentCard: {fileID: 11400000, guid: 64ee44da0823e4776a68fe02959aba57, type: 2}

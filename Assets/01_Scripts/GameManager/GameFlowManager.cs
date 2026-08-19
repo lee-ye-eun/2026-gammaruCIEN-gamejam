@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // GameScene 안에서의 진행(대화/단서찾기/질문/카드덱/결과창)과 그 씬 로컬 참조를 전담.
 // 전역 상태(스탯)와 씬 전환은 GameManager(DontDestroyOnLoad)에 위임한다.
@@ -24,6 +25,7 @@ public class GameFlowManager : MonoBehaviour
     [Header("손님")]
     [SerializeField] private CustomerView customerView; // 맵에 있는 손님 프리팹
     [SerializeField] private List<CustomerData> customers = new List<CustomerData>(); // 미리 받아둔 손님 목록
+    [SerializeField] private RawImage backgroundImage; // 손님별 배경. 씬에 맞춰둔 크기/위치는 건드리지 않고 텍스처만 교체한다.
 
     private CustomerData currentCustomer;
     private int customerIndex = -1;
@@ -32,6 +34,12 @@ public class GameFlowManager : MonoBehaviour
 
     public string CurrentWorryText => currentCustomer != null ? currentCustomer.Dialogue.worryText : string.Empty;
     public IReadOnlyList<QuestionLogEntry> CurrentQuestionLogs => questionLogs;
+
+    // 의심도 게이지 표시 조건: 카드를 고르는 중이면서 플레이어에게 카드 뒷면이 실제로 보이는 동안에만 true.
+    // 손님 등장(Observing) / 단서 찾기(ClueFinding) / 카드 결과 / 결과창에서는 false이고, 투시경을 켠 동안에도 false.
+    public bool AreCardBacksVisible => currentState == GameState.CardSelecting
+        && cardDeck != null
+        && cardDeck.AreCardBacksVisible;
 
     [Header("대화 (Observing / CardSelecting의 질문 답변 / ShowingCardResult 공용)")]
     [SerializeField] private GameObject dialoguePanel;
@@ -152,6 +160,8 @@ public class GameFlowManager : MonoBehaviour
         currentCustomer = customers[customerIndex];
         questionLogs.Clear();
         if (customerView != null) customerView.SetData(currentCustomer);
+        // 배경 텍스처만 갈아끼운다. 크기/위치는 씬에서 맞춰둔 값을 그대로 쓰므로 RectTransform은 손대지 않는다.
+        if (backgroundImage != null && currentCustomer.background != null) backgroundImage.texture = currentCustomer.background;
         // 새 라운드 시작: 카드덱을 여기서 한 번만 리셋해둔다 (라운드당 CardSelecting은 한 번만 진입하므로 충분).
         if (cardDeck != null) cardDeck.PrepareForNewRound();
 
