@@ -116,7 +116,7 @@ public class SoundManager : MonoBehaviour
     }
 
     // 미리 등록해둔 SFX를 key로 바로 재생
-    public AudioSource PlaySFX(string key, float volume = 1f, float pitch = 1f, bool loop = false)
+    public AudioSource PlaySFX(string key, float volume = 1.3f, float pitch = 1f, bool loop = false)
     {
         if (sfxLookup != null && sfxLookup.TryGetValue(key, out AudioClip clip))
         {

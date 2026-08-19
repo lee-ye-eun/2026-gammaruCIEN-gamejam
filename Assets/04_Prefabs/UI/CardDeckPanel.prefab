@@ -10023,8 +10023,9 @@ MonoBehaviour:
   drawDuration: 0.22
   drawInterval: 0.04
   flipDuration: 0.26
-  cardDrawSfxKey: cardDraw
-  cardFlipSfxKey: cardFlip
+  cardDrawSfxKey: drrrrr
+  cardFlipSfxKey: chak
+  cardPlaceSfxKey: toook
 --- !u!114 &2592163539488300367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14564,10 +14565,18 @@ PrefabInstance:
       propertyPath: data
       value: 
       objectReference: {fileID: 11400000, guid: 552e233c27ba8448088038b68babb595, type: 2}
+    - target: {fileID: 4658256669064772991, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6843b844cf041004d8e197b3552eacae, type: 3}
     - target: {fileID: 6713115006316188098, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 210
       objectReference: {fileID: 0}
+    - target: {fileID: 7156482814280491484, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6843b844cf041004d8e197b3552eacae, type: 3}
     - target: {fileID: 8802812229505754912, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_text
       value: "\uC5F0\uC778"
@@ -14733,10 +14742,18 @@ PrefabInstance:
       propertyPath: data
       value: 
       objectReference: {fileID: 11400000, guid: 1919dda70483b46fabee1ecf46f9cda8, type: 2}
+    - target: {fileID: 4658256669064772991, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5cdd4c17110b65946b895427ed6f20fa, type: 3}
     - target: {fileID: 6713115006316188098, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 210
       objectReference: {fileID: 0}
+    - target: {fileID: 7156482814280491484, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5cdd4c17110b65946b895427ed6f20fa, type: 3}
     - target: {fileID: 8802812229505754912, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_text
       value: "\uC545\uB9C8"
@@ -14902,10 +14919,18 @@ PrefabInstance:
       propertyPath: data
       value: 
       objectReference: {fileID: 11400000, guid: db0fc53dd478a4f5ab0c23c6b314ad45, type: 2}
+    - target: {fileID: 4658256669064772991, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0b2f50a4b57948249be5cd770afc545c, type: 3}
     - target: {fileID: 6713115006316188098, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 210
       objectReference: {fileID: 0}
+    - target: {fileID: 7156482814280491484, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0b2f50a4b57948249be5cd770afc545c, type: 3}
     - target: {fileID: 8802812229505754912, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_text
       value: "\uB2EC"
@@ -15071,10 +15096,18 @@ PrefabInstance:
       propertyPath: data
       value: 
       objectReference: {fileID: 11400000, guid: 47e9bbcbcb2f645048ac3670f97440c4, type: 2}
+    - target: {fileID: 4658256669064772991, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 245eaa7665b2969479f66a14c3c1fc5d, type: 3}
     - target: {fileID: 6713115006316188098, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 210
       objectReference: {fileID: 0}
+    - target: {fileID: 7156482814280491484, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 245eaa7665b2969479f66a14c3c1fc5d, type: 3}
     - target: {fileID: 8802812229505754912, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_text
       value: "\uD0DC\uC591"
@@ -15240,10 +15273,18 @@ PrefabInstance:
       propertyPath: data
       value: 
       objectReference: {fileID: 11400000, guid: 64ee44da0823e4776a68fe02959aba57, type: 2}
+    - target: {fileID: 4658256669064772991, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5cbd08683e2de334dbdc76f5a1210736, type: 3}
     - target: {fileID: 6713115006316188098, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 210
       objectReference: {fileID: 0}
+    - target: {fileID: 7156482814280491484, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5cbd08683e2de334dbdc76f5a1210736, type: 3}
     - target: {fileID: 8802812229505754912, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_text
       value: "\uC740\uB454\uC790"
@@ -15409,10 +15450,18 @@ PrefabInstance:
       propertyPath: data
       value: 
       objectReference: {fileID: 11400000, guid: be672a521513049a9a29d6fa0bd7b42b, type: 2}
+    - target: {fileID: 4658256669064772991, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 35a82de043fe2fd4aa252a22a0ccb65a, type: 3}
     - target: {fileID: 6713115006316188098, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 210
       objectReference: {fileID: 0}
+    - target: {fileID: 7156482814280491484, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 35a82de043fe2fd4aa252a22a0ccb65a, type: 3}
     - target: {fileID: 8802812229505754912, guid: 3b0d6c9326cea4774838fa760c269d12, type: 3}
       propertyPath: m_text
       value: "\uD0D1"

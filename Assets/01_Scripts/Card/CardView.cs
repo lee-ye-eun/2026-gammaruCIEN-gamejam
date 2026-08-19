@@ -39,6 +39,9 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private Color frontColor = new Color32(248, 246, 238, 255);
     [SerializeField] private float hoverScale = 1.08f;
 
+    [Header("사운드 키")]
+    [SerializeField] private string cardPickUpSfxKey = "chak";
+
     public CardData Data => data;
     public bool IsSelected { get; private set; }
     public bool IsFaceUp { get; private set; }
@@ -276,6 +279,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (!CanInteractInDeck()) return;
 
+        if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(cardPickUpSfxKey);
         isDragging = true;
         ignoreNextClick = true;
         UpdateFrontPreviewState(true);
