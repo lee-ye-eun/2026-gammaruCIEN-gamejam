@@ -127,6 +127,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 776894022}
     m_Modifications:
+    - target: {fileID: 666594933519061110, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
+      propertyPath: clueButtons.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 666594933519061110, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
+      propertyPath: 'clueButtons.Array.data[0]'
+      value: 
+      objectReference: {fileID: 865659701}
+    - target: {fileID: 666594933519061110, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
+      propertyPath: 'clueButtons.Array.data[1]'
+      value: 
+      objectReference: {fileID: 995965832}
+    - target: {fileID: 666594933519061110, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
+      propertyPath: 'clueButtons.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1459026535}
     - target: {fileID: 6579847739379439245, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -619,11 +635,11 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1953623660}
   - {fileID: 1319712256}
   - {fileID: 1247184031}
   - {fileID: 775061172}
   - {fileID: 604251297}
+  - {fileID: 1953623660}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -758,6 +774,17 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!114 &865659701 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 334337671777140797, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+  m_PrefabInstance: {fileID: 1308983278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1001 &958512995
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -815,6 +842,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 87e3ad38fea97410e8f19d31d8142994, type: 3}
+--- !u!114 &995965832 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3061295174032353598, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+  m_PrefabInstance: {fileID: 1308983278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1001 &1035743520
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1005,6 +1043,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 776894022}
     m_Modifications:
+    - target: {fileID: 1400387726632704708, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+      propertyPath: outlineWidth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1848052214529892246, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1848052214529892246, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c75c28030b1684fe4bf4cb8257d1266b, type: 3}
     - target: {fileID: 4067087368098087565, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1085,10 +1135,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4591981175026066497, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591981175026066497, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c75c28030b1684fe4bf4cb8257d1266b, type: 3}
+    - target: {fileID: 5316048773408144311, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+      propertyPath: outlineWidth
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5757727396816207542, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
       propertyPath: m_Name
       value: Customer
       objectReference: {fileID: 0}
+    - target: {fileID: 8198868409997282278, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+      propertyPath: outlineWidth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9052745625466652532, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9052745625466652532, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c75c28030b1684fe4bf4cb8257d1266b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1118,6 +1192,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd669368092c400b9b9b18f1f34ebba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardDeck
+--- !u!114 &1459026535 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5743068720803894715, guid: 724e1b623474e4076af36d7917529c1a, type: 3}
+  m_PrefabInstance: {fileID: 1308983278}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!1 &1512005336
 GameObject:
   m_ObjectHideFlags: 0

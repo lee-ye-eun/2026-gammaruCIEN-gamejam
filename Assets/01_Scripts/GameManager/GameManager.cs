@@ -83,6 +83,9 @@ public class GameManager : MonoBehaviour
     {
         currentState = newState;
 
+        // 단서 찾기 상태일 때만 단서 이미지 호버/클릭이 가능하도록
+        if (clueFinder != null) clueFinder.SetInteractable(newState == GameState.ClueFinding);
+
         switch (newState)
         {
             case GameState.Observing:
