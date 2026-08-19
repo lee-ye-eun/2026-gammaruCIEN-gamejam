@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,8 +27,15 @@ public class CardDeck : MonoBehaviour
     [Header("연출")]
     [SerializeField] private float drawDuration = 0.22f;
     [SerializeField] private float drawInterval = 0.04f;
-    [SerializeField] private float mirrorPreviewFadeDuration = 0.18f;
     [SerializeField] private float flipDuration = 0.26f;
+
+    [Header("투시경")]
+    [SerializeField] private Button xRayButton;
+    [SerializeField] private GameObject xRayOverlay;
+    [SerializeField] private TMP_Text xRayButtonLabel;
+    [SerializeField] private string xRayOnText = "투시경 ON";
+    [SerializeField] private string xRayOffText = "투시경 OFF";
+    [SerializeField] private string xRayToggleSfxKey = "piiik";
 
     [Header("사운드 키")]
     [SerializeField] private string cardDrawSfxKey = "cardDraw";
@@ -39,6 +47,7 @@ public class CardDeck : MonoBehaviour
     private bool cardsDrawn;
     private bool isDrawing;
     private bool isResolving;
+    private bool xRayActive;
 
     public IReadOnlyList<CardView> SelectedCards => selectionSlots
         .Where(slot => slot != null && slot.CurrentCard != null)
@@ -58,6 +67,7 @@ public class CardDeck : MonoBehaviour
         SetupCards();
 
         if (nextButton != null) nextButton.onClick.AddListener(ConfirmSelection);
+        if (xRayButton != null) xRayButton.onClick.AddListener(ToggleXRayMode);
 
         UpdateActionButtons();
     }
@@ -65,6 +75,7 @@ public class CardDeck : MonoBehaviour
     private void OnDestroy()
     {
         if (nextButton != null) nextButton.onClick.RemoveListener(ConfirmSelection);
+        if (xRayButton != null) xRayButton.onClick.RemoveListener(ToggleXRayMode);
 
         foreach (var card in cards)
         {
@@ -79,6 +90,7 @@ public class CardDeck : MonoBehaviour
         isDrawing = false;
         isResolving = false;
         cardsDrawn = false;
+        SetXRayMode(false);
 
         SetupSlots();
         SetupCards();
@@ -126,6 +138,7 @@ public class CardDeck : MonoBehaviour
 
         targetSlot.SetCard(card);
         card.MoveToSlot(targetSlot);
+        card.SetXRayVisible(xRayActive);
         PlaySfx(cardPlaceSfxKey);
         UpdateActionButtons();
         return true;
@@ -142,11 +155,14 @@ public class CardDeck : MonoBehaviour
         }
 
         card.ReturnToDeckHome();
+        card.SetXRayVisible(xRayActive);
         UpdateActionButtons();
     }
 
     public void ResetSelection()
     {
+        SetXRayMode(false);
+
         foreach (var slot in selectionSlots)
         {
             if (slot == null) continue;
@@ -211,15 +227,6 @@ public class CardDeck : MonoBehaviour
 
         yield return new WaitForSeconds(drawDuration);
 
-        foreach (var card in cards)
-        {
-            if (card == null) continue;
-
-            card.RevealFrontPreviewAfterDraw(mirrorPreviewFadeDuration);
-        }
-
-        yield return new WaitForSeconds(mirrorPreviewFadeDuration);
-
         isDrawing = false;
         cardsDrawn = true;
         UpdateActionButtons();
@@ -228,6 +235,7 @@ public class CardDeck : MonoBehaviour
     private IEnumerator ConfirmSelectionRoutine()
     {
         isResolving = true;
+        SetXRayMode(false);
         UpdateActionButtons();
 
         foreach (var card in SelectedCards)
@@ -308,18 +316,71 @@ public class CardDeck : MonoBehaviour
             card.RegisterDeck(this);
             card.SetSelected(false);
             card.SetFaceUp(false, true);
+            card.SetXRayVisible(xRayActive && cardsDrawn);
             card.OnClicked += HandleCardClicked;
         }
     }
 
     private void UpdateActionButtons()
     {
+        bool canUseXRay = CanUseXRayMode();
+        if (!canUseXRay && xRayActive)
+        {
+            SetXRayMode(false);
+        }
+
         if (nextButton != null)
         {
             bool showNextButton = cardsDrawn || isResolving;
             nextButton.gameObject.SetActive(showNextButton);
             nextButton.interactable = showNextButton && !isResolving && SelectedCards.Count == MaxSelectable;
         }
+
+        if (xRayButton != null)
+        {
+            xRayButton.gameObject.SetActive(canUseXRay);
+            xRayButton.interactable = canUseXRay;
+        }
+
+        UpdateXRayVisual();
+    }
+
+    private void ToggleXRayMode()
+    {
+        if (!CanUseXRayMode()) return;
+
+        SetXRayMode(!xRayActive);
+        PlaySfx(xRayToggleSfxKey);
+    }
+
+    private void SetXRayMode(bool active)
+    {
+        xRayActive = active && CanUseXRayMode();
+
+        if (xRayOverlay != null)
+        {
+            xRayOverlay.SetActive(xRayActive);
+        }
+
+        foreach (var card in cards)
+        {
+            if (card != null) card.SetXRayVisible(xRayActive);
+        }
+
+        UpdateXRayVisual();
+    }
+
+    private void UpdateXRayVisual()
+    {
+        if (xRayButtonLabel != null)
+        {
+            xRayButtonLabel.text = xRayActive ? xRayOnText : xRayOffText;
+        }
+    }
+
+    private bool CanUseXRayMode()
+    {
+        return cardsDrawn && !isDrawing && !isResolving;
     }
 
     private static void PlaySfx(string key)

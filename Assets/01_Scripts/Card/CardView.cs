@@ -24,17 +24,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] private Button button;
     [SerializeField] private GameObject selectedIndicator;
 
-    [Header("거울 앞면 미리보기")]
-    [SerializeField] private GameObject frontPreviewRoot;
-    [SerializeField] private RectTransform frontPreviewCard;
-    [SerializeField] private Image previewSymbolImage;
-    [SerializeField] private TMP_Text previewNameText;
-    [SerializeField] private TMP_Text previewKeywordText;
-    [SerializeField] private CanvasGroup frontPreviewCanvasGroup;
-    [SerializeField] private float frontPreviewCollapsedY;
-    [SerializeField] private float frontPreviewExpandedY = -116f;
-    [SerializeField] private float frontPreviewSlideDuration = 0.16f;
-
     [Header("연출")]
     [SerializeField] private Color backColor = new Color32(93, 25, 49, 255);
     [SerializeField] private Color frontColor = new Color32(248, 246, 238, 255);
@@ -59,11 +48,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private Vector2 homeSizeDelta;
     private bool isDragging;
     private bool ignoreNextClick;
-    private Coroutine frontPreviewRoutine;
-    private Coroutine frontPreviewFadeRoutine;
-    private bool frontPreviewSuppressed;
-    private float frontPreviewBaseY;
-    private bool frontPreviewBaseCached;
+    private bool xRayVisible;
 
     private void Awake()
     {
@@ -86,25 +71,11 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void OnEnable()
     {
         EnsureReferences();
-        CacheFrontPreviewBaseY();
         Refresh();
-        UpdateFrontPreviewState(true);
     }
 
     private void OnDisable()
     {
-        if (frontPreviewRoutine != null)
-        {
-            StopCoroutine(frontPreviewRoutine);
-            frontPreviewRoutine = null;
-        }
-
-        if (frontPreviewFadeRoutine != null)
-        {
-            StopCoroutine(frontPreviewFadeRoutine);
-            frontPreviewFadeRoutine = null;
-        }
-
         isDragging = false;
     }
 
@@ -142,7 +113,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         ReturnToDeckHome(false);
         gameObject.SetActive(true);
         SetFaceUp(false, true);
-        HideFrontPreviewForDraw();
+        SetXRayVisible(false);
         rectTransform.anchoredPosition = pilePosition;
         rectTransform.localScale = Vector3.one;
     }
@@ -174,7 +145,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         SetSelected(true);
         SetSlotRole(string.Empty);
         SetFaceUp(false, true);
-        UpdateFrontPreviewState(true);
 
         transform.SetParent(slot.transform, false);
         rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
@@ -183,58 +153,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         rectTransform.anchoredPosition = Vector2.zero;
         rectTransform.sizeDelta = homeSizeDelta.sqrMagnitude > 0f ? homeSizeDelta : rectTransform.sizeDelta;
         rectTransform.localScale = Vector3.one;
-    }
-
-    public void HideFrontPreviewForDraw()
-    {
-        frontPreviewSuppressed = true;
-
-        if (frontPreviewRoutine != null)
-        {
-            StopCoroutine(frontPreviewRoutine);
-            frontPreviewRoutine = null;
-        }
-
-        if (frontPreviewFadeRoutine != null)
-        {
-            StopCoroutine(frontPreviewFadeRoutine);
-            frontPreviewFadeRoutine = null;
-        }
-
-        SetFrontPreviewAlpha(0f);
-        if (frontPreviewRoot != null) frontPreviewRoot.SetActive(false);
-    }
-
-    public void RevealFrontPreviewAfterDraw(float duration)
-    {
-        if (frontPreviewFadeRoutine != null)
-        {
-            StopCoroutine(frontPreviewFadeRoutine);
-        }
-
-        frontPreviewFadeRoutine = StartCoroutine(FadeInFrontPreview(duration));
-    }
-
-    public IEnumerator FadeInFrontPreview(float duration)
-    {
-        frontPreviewSuppressed = false;
-        UpdateFrontPreviewState(true);
-
-        if (!CanShowFrontPreview()) yield break;
-
-        duration = Mathf.Max(0.01f, duration);
-        SetFrontPreviewAlpha(0f);
-
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            SetFrontPreviewAlpha(Mathf.Clamp01(elapsed / duration));
-            yield return null;
-        }
-
-        SetFrontPreviewAlpha(1f);
-        frontPreviewFadeRoutine = null;
     }
 
     public void ReturnToDeckHome(bool keepFaceState = true)
@@ -259,10 +177,7 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (!keepFaceState)
         {
             SetFaceUp(false, true);
-        }
-        else
-        {
-            UpdateFrontPreviewState(true);
+            SetXRayVisible(false);
         }
     }
 
@@ -280,14 +195,19 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         EnsureReferences();
         IsFaceUp = faceUp;
+        if (faceUp) xRayVisible = false;
 
-        if (frontRoot != null) frontRoot.SetActive(faceUp);
-        if (backRoot != null) backRoot.SetActive(!faceUp);
-        if (cardBodyImage != null) cardBodyImage.color = faceUp ? frontColor : backColor;
+        RefreshFaceVisibility();
         if (selectedIndicator != null) selectedIndicator.SetActive(false);
 
-        UpdateFrontPreviewState(instant);
         if (instant) rectTransform.localScale = Vector3.one;
+    }
+
+    public void SetXRayVisible(bool visible)
+    {
+        EnsureReferences();
+        xRayVisible = visible && !IsFaceUp;
+        RefreshFaceVisibility();
     }
 
     public IEnumerator FlipFaceUp(float duration)
@@ -324,7 +244,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (!CanInteractInDeck()) return;
 
         rectTransform.localScale = Vector3.one * hoverScale;
-        ShowFrontPreview(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -333,7 +252,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         rectTransform.localScale = Vector3.one;
         rectTransform.anchoredPosition = homeAnchoredPosition;
-        ShowFrontPreview(false);
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -343,7 +261,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (SoundManager.Instance != null) SoundManager.Instance.PlaySFX(cardPickUpSfxKey);
         isDragging = true;
         ignoreNextClick = true;
-        UpdateFrontPreviewState(true);
 
         if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
 
@@ -419,101 +336,13 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             && !IsFaceUp;
     }
 
-    private void ShowFrontPreview(bool expanded)
+    private void RefreshFaceVisibility()
     {
-        if (!CanShowFrontPreview()) return;
+        bool showFront = IsFaceUp || xRayVisible;
 
-        float targetY = GetFrontPreviewTargetY(expanded);
-
-        if (frontPreviewRoutine != null)
-        {
-            StopCoroutine(frontPreviewRoutine);
-        }
-
-        frontPreviewRoutine = StartCoroutine(AnimateFrontPreview(targetY));
-    }
-
-    private IEnumerator AnimateFrontPreview(float targetY)
-    {
-        if (frontPreviewCard == null) yield break;
-
-        Vector2 startPosition = frontPreviewCard.anchoredPosition;
-        Vector2 targetPosition = new Vector2(startPosition.x, targetY);
-        float elapsed = 0f;
-
-        while (elapsed < frontPreviewSlideDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / frontPreviewSlideDuration));
-            frontPreviewCard.anchoredPosition = Vector2.LerpUnclamped(startPosition, targetPosition, t);
-            yield return null;
-        }
-
-        frontPreviewCard.anchoredPosition = targetPosition;
-        frontPreviewRoutine = null;
-    }
-
-    private void UpdateFrontPreviewState(bool instant)
-    {
-        bool showPreview = CanShowFrontPreview();
-
-        if (frontPreviewRoot != null)
-        {
-            frontPreviewRoot.SetActive(showPreview);
-        }
-
-        if (frontPreviewCard != null && instant)
-        {
-            frontPreviewCard.anchoredPosition = new Vector2(frontPreviewCard.anchoredPosition.x, GetFrontPreviewTargetY(false));
-        }
-
-        SetFrontPreviewAlpha(showPreview ? 1f : 0f);
-    }
-
-    private float GetFrontPreviewTargetY(bool expanded)
-    {
-        CacheFrontPreviewBaseY();
-        return frontPreviewBaseY + (expanded ? frontPreviewExpandedY : frontPreviewCollapsedY);
-    }
-
-    private void CacheFrontPreviewBaseY()
-    {
-        if (frontPreviewBaseCached || frontPreviewCard == null) return;
-
-        frontPreviewBaseY = frontPreviewCard.anchoredPosition.y;
-        frontPreviewBaseCached = true;
-    }
-
-    private bool CanShowFrontPreview()
-    {
-        return frontPreviewRoot != null
-            && frontPreviewCard != null
-            && !frontPreviewSuppressed
-            && !IsFaceUp
-            && CurrentSlot == null
-            && !isDragging;
-    }
-
-    private void SetFrontPreviewAlpha(float alpha)
-    {
-        CanvasGroup group = EnsureFrontPreviewCanvasGroup();
-        if (group != null) group.alpha = alpha;
-    }
-
-    private CanvasGroup EnsureFrontPreviewCanvasGroup()
-    {
-        if (frontPreviewCanvasGroup != null) return frontPreviewCanvasGroup;
-        if (frontPreviewRoot == null) return null;
-
-        frontPreviewCanvasGroup = frontPreviewRoot.GetComponent<CanvasGroup>();
-        if (frontPreviewCanvasGroup == null)
-        {
-            frontPreviewCanvasGroup = frontPreviewRoot.AddComponent<CanvasGroup>();
-        }
-
-        frontPreviewCanvasGroup.interactable = false;
-        frontPreviewCanvasGroup.blocksRaycasts = false;
-        return frontPreviewCanvasGroup;
+        if (frontRoot != null) frontRoot.SetActive(showFront);
+        if (backRoot != null) backRoot.SetActive(!showFront);
+        if (cardBodyImage != null) cardBodyImage.color = showFront ? frontColor : backColor;
     }
 
     private void SetSlotRole(string roleText)
@@ -528,7 +357,6 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     private void Refresh()
     {
         ApplyDataToFace(symbolImage, nameText, keywordText);
-        ApplyDataToFace(previewSymbolImage, previewNameText, previewKeywordText);
     }
 
     private void ApplyDataToFace(Image targetSymbolImage, TMP_Text targetNameText, TMP_Text targetKeywordText)
