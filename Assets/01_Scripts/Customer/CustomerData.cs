@@ -22,6 +22,9 @@ public class CustomerData : ScriptableObject
     public string situationDescription;
     public Sprite portrait;
 
+    [Header("손님별 배경 아트 (Assets/03_Sprites/BackGround). 씬의 BackGround 크기/위치는 그대로 두고 텍스처만 교체된다")]
+    public Texture background;
+
     [Header("대사 CSV (key,value 행: worryText / clue1~4 / question1~4,question1~4_clue / reaction0~3)")]
     [SerializeField] private TextAsset dialogueCsv;
 

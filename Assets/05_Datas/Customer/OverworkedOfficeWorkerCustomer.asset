@@ -22,6 +22,7 @@ MonoBehaviour:
     \uC77C\uC774\uB77C \uBC84\uD2F0\uACE0 \uC788\uC9C0\uB9CC \uD604\uC7AC \uD68C\uC0AC\uB97C
     \uB5A0\uB098 \uC774\uC9C1\uD574\uC57C \uD55C\uB2E4."
   portrait: {fileID: 0}
+  background: {fileID: 2800000, guid: d976ae80c7fbb4a9f8ae47928ef73174, type: 3}
   dialogueCsv: {fileID: 4900000, guid: 7b936ed486de24ef5b244da121ce25f6, type: 3}
   causeCard: {fileID: 11400000, guid: 552e233c27ba8448088038b68babb595, type: 2}
   presentCard: {fileID: 11400000, guid: 1919dda70483b46fabee1ecf46f9cda8, type: 2}
