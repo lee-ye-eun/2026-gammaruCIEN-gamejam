@@ -33,6 +33,18 @@ public class ClueFinder : MonoBehaviour
         currentCustomer = customer;
     }
 
+    // 단서 찾기 상태가 아닐 때 GameManager가 호출: 클릭(interactable)과 호버(raycastTarget) 둘 다 막는다
+    public void SetInteractable(bool enabled)
+    {
+        foreach (var button in clueButtons)
+        {
+            if (button == null) continue;
+
+            button.interactable = enabled;
+            if (button.targetGraphic != null) button.targetGraphic.raycastTarget = enabled;
+        }
+    }
+
     private void HandleClueButtonClicked(int index)
     {
         var clues = currentCustomer != null ? currentCustomer.Dialogue.clues : null;
