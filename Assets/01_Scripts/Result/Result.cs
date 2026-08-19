@@ -3,9 +3,9 @@ using UnityEngine.InputSystem;
 using TMPro;
 
 // 결과창(카드 결과 대사 다음, 매 손님마다 표시) 텍스트 출력 + 화면 터치 감지 담당.
-// 결과 패널의 활성 상태는 GameFlowManager가 관리. 터치 시 GameFlowManager.Instance.ChangeState(Observing)을 직접 호출한다.
-// (의심도 임계치 초과로 인한 스토리 씬 이동은 여기서 확인하지 않는다 - GameManager.AddSuspicion()이 임계치를 넘는
-// 즉시 처리하므로, 이 시점엔 이미 전환이 시작되어 있거나 애초에 해당하지 않는다.)
+// 결과 패널의 활성 상태는 GameFlowManager가 관리. 터치 시 미뤄둔 카드 결과 의심도를 실제로 반영하고,
+// 그 반영으로 의심도가 임계치를 넘었으면(스토리 씬 전환은 GameManager.AddSuspicion()이 즉시 처리) 다음 손님으로
+// 넘어가지 않고 멈춘다. 넘지 않았으면 평소처럼 GameFlowManager.Instance.ChangeState(Observing)을 호출한다.
 
 public class Result : MonoBehaviour
 {
@@ -32,6 +32,13 @@ public class Result : MonoBehaviour
     private void AdvanceTouch()
     {
         isTouchActive = false; // 중복 트리거 방지
-        if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.Observing);
+        if (GameFlowManager.Instance == null) return;
+
+        GameFlowManager.Instance.CommitCardResultSuspicion();
+
+        // 방금 반영으로 의심도가 임계치를 넘었으면 GameManager가 이미 스토리 씬 전환을 시작했다 - 다음 손님으로 넘어가지 않는다.
+        if (GameManager.Instance != null && GameManager.Instance.IsSuspicionThresholdReached) return;
+
+        GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.Observing);
     }
 }

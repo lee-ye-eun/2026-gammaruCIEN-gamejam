@@ -5,6 +5,7 @@ public class ClueVisual
 {
     public Sprite sprite;
     public Vector2 position; // 단서 이미지의 anchoredPosition
+    public Sprite zoomSprite; // 단서를 터치했을 때 뜨는 확대(클로즈업) 이미지. 비워두면 sprite를 그대로 확대해서 보여준다.
 }
 
 [CreateAssetMenu(fileName = "NewCustomerData", menuName = "Tarot/Customer Data")]
@@ -29,7 +30,7 @@ public class CustomerData : ScriptableObject
     public CardData presentCard;
     public CardData adviceCard;
 
-    [Header("단서 이미지 3개 (스프라이트 + 좌표). CSV의 clue1~3과 순서로 매칭됨")]
+    [Header("단서 이미지 3개 (스프라이트 + 좌표 + 확대 이미지). CSV의 clue1~3과 순서로 매칭됨")]
     public ClueVisual[] clueVisuals;
 
     private CustomerDialogueData cachedDialogue;

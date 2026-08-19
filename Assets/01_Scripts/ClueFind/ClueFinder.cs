@@ -151,6 +151,8 @@ public class ClueFinder : MonoBehaviour
         var visuals = currentCustomer != null ? currentCustomer.clueVisuals : null;
         if (visuals != null && index >= 0 && index < visuals.Length && visuals[index] != null)
         {
+            // 확대 전용 이미지가 지정돼 있으면 그걸 우선 쓰고, 없으면 지도에 놓인 단서 스프라이트를 그대로 확대해서 보여준다.
+            if (visuals[index].zoomSprite != null) return visuals[index].zoomSprite;
             return visuals[index].sprite;
         }
 

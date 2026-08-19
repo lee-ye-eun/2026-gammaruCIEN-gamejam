@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
@@ -27,6 +28,8 @@ public class DialogueManager : MonoBehaviour
     private Mode mode;
     private bool isTouchActive;
     private CustomerData questioningCustomer;
+    private readonly Queue<string> pendingLines = new Queue<string>();
+    private System.Action onSequenceComplete;
 
     private void Awake()
     {
@@ -67,6 +70,36 @@ public class DialogueManager : MonoBehaviour
     public void ShowDialogue(CustomerData customer)
     {
         ShowDialogue(customer != null ? customer.Dialogue.worryText : string.Empty);
+    }
+
+    // 여러 대사를 터치마다 한 줄씩 순서대로 보여준다 (예: 선택한 카드 3장의 해석 -> 손님 반응).
+    // 빈 줄은 건너뛰고, 다 보여준 뒤 onComplete을 호출한다 (lines가 전부 비어있으면 바로 호출).
+    public void ShowDialogueSequence(IEnumerable<string> lines, System.Action onComplete)
+    {
+        pendingLines.Clear();
+        if (lines != null)
+        {
+            foreach (var line in lines)
+            {
+                if (!string.IsNullOrWhiteSpace(line)) pendingLines.Enqueue(line);
+            }
+        }
+
+        onSequenceComplete = onComplete;
+        AdvanceSequence();
+    }
+
+    private void AdvanceSequence()
+    {
+        if (pendingLines.Count == 0)
+        {
+            var callback = onSequenceComplete;
+            onSequenceComplete = null;
+            callback?.Invoke();
+            return;
+        }
+
+        ShowDialogue(pendingLines.Dequeue());
     }
 
     // 질문 차례 시작: 질문창부터 보여준다
@@ -136,7 +169,15 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        // 일반 대사(관찰 -> 단서 찾기, 카드 결과 -> 결과창) 넘김
+        // 카드 결과 화면(선택한 카드 해석 3줄 -> 손님 반응)처럼 여러 줄을 보여주는 중이면 다음 줄로 넘긴다.
+        // 다 보여준 뒤에는 ShowDialogueSequence에 넘긴 onComplete이 알아서 다음 상태로 전환한다.
+        if (onSequenceComplete != null || pendingLines.Count > 0)
+        {
+            AdvanceSequence();
+            return;
+        }
+
+        // 일반 대사(관찰 -> 단서 찾기) 넘김
         if (GameFlowManager.Instance == null) return;
 
         if (GameFlowManager.Instance.CurrentState == GameFlowManager.GameState.Observing)
@@ -147,10 +188,6 @@ public class DialogueManager : MonoBehaviour
         {
             // 단서 텍스트를 보다가 터치하면 단서 찾기 화면으로 복귀 (ClueFinding 상태는 그대로 유지)
             GameFlowManager.Instance.ReturnToClueFinding();
-        }
-        else if (GameFlowManager.Instance.CurrentState == GameFlowManager.GameState.ShowingCardResult)
-        {
-            GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.ShowingResultPanel);
         }
     }
 }

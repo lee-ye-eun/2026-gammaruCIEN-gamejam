@@ -27,6 +27,7 @@ public class GameFlowManager : MonoBehaviour
 
     private CustomerData currentCustomer;
     private int customerIndex = -1;
+    private int pendingCardResultSuspicionDelta; // 카드 결과로 정해진 의심도 변화량. 결과창 터치 시에만 실제로 반영됨.
     private readonly List<QuestionLogEntry> questionLogs = new List<QuestionLogEntry>();
 
     public string CurrentWorryText => currentCustomer != null ? currentCustomer.Dialogue.worryText : string.Empty;
@@ -192,18 +193,47 @@ public class GameFlowManager : MonoBehaviour
         if (cardDeck != null) cardDeck.DrawCards();
     }
 
-    // 카드 제출 후 결과 대사 출력. 맞춘 카드 개수에 따른 의심도 가감만 반영한다.
-    // (질문에 따른 의심도는 더 이상 여기서 정산하지 않는다 - GameManager.IncrementQuestionAskedCount()에서 질문할 때마다 즉시 반영됨)
+    // 카드 제출 후: 선택한 카드 3장의 위치별 해석(원인/현재/조언, 화자는 주인공)을 순서대로 보여준 다음,
+    // 맞춘 카드 개수에 따른 손님의 반응 대사를 보여준다. 의심도 변화량은 여기서 정해두기만 하고,
+    // 실제로 반영하지는 않는다 (결과창을 터치해 넘어가려는 시점에 CommitCardResultSuspicion()이 반영함).
     private void EnterShowingCardResult()
     {
         SetPanels(dialogue: true, clueFinding: false, cardDeckOn: false, result: false);
 
         int matchCount = cardDeck != null && currentCustomer != null ? cardDeck.CountCorrectSlots(currentCustomer) : 0;
         int wrongCount = 3 - matchCount;
-        if (GameManager.Instance != null) GameManager.Instance.AddSuspicion(GetCardResultSuspicionDelta(wrongCount));
+        pendingCardResultSuspicionDelta = GetCardResultSuspicionDelta(wrongCount);
 
         string reaction = currentCustomer != null ? currentCustomer.GetReaction(matchCount) : string.Empty;
-        if (dialogueManager != null) dialogueManager.ShowDialogue(reaction);
+
+        List<string> lines = GetSelectedCardMeaningLines();
+        lines.Add(reaction);
+
+        if (dialogueManager != null)
+        {
+            dialogueManager.ShowDialogueSequence(lines, () => ChangeState(GameState.ShowingResultPanel));
+        }
+    }
+
+    // 선택된 3장의 카드를 슬롯 순서(원인/현재/조언)대로, 그 위치에 해당하는 해석 대사만 뽑아 모은다.
+    // 카드에 그 위치의 해석이 비어 있으면 건너뛴다.
+    private List<string> GetSelectedCardMeaningLines()
+    {
+        var lines = new List<string>();
+        if (cardDeck == null) return lines;
+
+        IReadOnlyList<CardView> selected = cardDeck.SelectedCards;
+        AddMeaningLine(lines, selected, 0, data => data.causeMeaning);
+        AddMeaningLine(lines, selected, 1, data => data.presentMeaning);
+        AddMeaningLine(lines, selected, 2, data => data.adviceMeaning);
+        return lines;
+    }
+
+    private static void AddMeaningLine(List<string> lines, IReadOnlyList<CardView> selected, int index, System.Func<CardData, string> pickMeaning)
+    {
+        CardData data = index < selected.Count && selected[index] != null ? selected[index].Data : null;
+        string line = data != null ? pickMeaning(data) : null;
+        if (!string.IsNullOrWhiteSpace(line)) lines.Add(line);
     }
 
     private int GetCardResultSuspicionDelta(int wrongCount)
@@ -218,18 +248,26 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    // 결과창: 이번 라운드 동안 오른 의심도(질문+카드 결과, 이미 전체 의심도에 실시간으로 반영되어 있음)를
-    // 문구로 안내하고, 다음 손님을 위해 라운드 스탯을 초기화한다. 터치하면 다음 손님으로 넘어감(ResultManager가 처리)
+    // 결과창: 카드 결과로 정해진 의심도 변화량을 미리보기로 안내만 하고(아직 반영 안 함), 다음 손님을 위해
+    // 라운드 스탯을 초기화한다. 터치하면 CommitCardResultSuspicion()이 실제로 반영함(Result가 처리).
     private void EnterShowingResultPanel()
     {
         SetPanels(dialogue: false, clueFinding: false, cardDeckOn: false, result: true);
 
         if (GameManager.Instance != null)
         {
-            string text = $"의심도가 {GameManager.Instance.CurrentCustomerSuspicion}만큼 증가했습니다.";
+            string text = $"의심도가 {pendingCardResultSuspicionDelta}만큼 증가합니다.";
             if (resultManager != null) resultManager.ShowResult(text);
 
             GameManager.Instance.ResetRoundStats();
         }
+    }
+
+    // 결과창을 터치해 다음으로 넘어가려 할 때 Result가 호출: 미뤄둔 카드 결과 의심도를 이제 실제로 반영한다.
+    // 이 반영으로 의심도가 임계치를 처음 넘으면 GameManager.AddSuspicion() 내부에서 곧장 스토리 씬으로 이동한다.
+    public void CommitCardResultSuspicion()
+    {
+        if (GameManager.Instance != null) GameManager.Instance.AddSuspicion(pendingCardResultSuspicionDelta);
+        pendingCardResultSuspicionDelta = 0;
     }
 }
