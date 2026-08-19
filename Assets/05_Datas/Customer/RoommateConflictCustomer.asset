@@ -27,3 +27,13 @@ MonoBehaviour:
   causeCard: {fileID: 11400000, guid: be672a521513049a9a29d6fa0bd7b42b, type: 2}
   presentCard: {fileID: 11400000, guid: 64ee44da0823e4776a68fe02959aba57, type: 2}
   adviceCard: {fileID: 11400000, guid: 47e9bbcbcb2f645048ac3670f97440c4, type: 2}
+  clueVisuals:
+  - sprite: {fileID: 0}
+    position: {x: 0, y: 0}
+    zoomSprite: {fileID: 21300000, guid: eeea3e5fe67d54f4cace12b800ad5dbc, type: 3}
+  - sprite: {fileID: 0}
+    position: {x: 0, y: 0}
+    zoomSprite: {fileID: 21300000, guid: 9bec3ac04b547a44d93dc352bc77e583, type: 3}
+  - sprite: {fileID: 0}
+    position: {x: 0, y: 0}
+    zoomSprite: {fileID: 0}

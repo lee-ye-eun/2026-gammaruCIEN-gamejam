@@ -133,8 +133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2bd3c6a653114d4580c02a502595863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HoverOutline
-  outlineColor: {r: 0.77461636, g: 0.43454075, b: 0.8773585, a: 1}
-  outlineWidth: 8
+  outlineColor: {r: 0.37566984, g: 0.11747954, b: 0.4528302, a: 1}
+  outlineWidth: 6
   fadeDuration: 0.12
 --- !u!1 &1452126615938644935
 GameObject:
@@ -269,8 +269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2bd3c6a653114d4580c02a502595863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HoverOutline
-  outlineColor: {r: 0.77461636, g: 0.43454075, b: 0.8773585, a: 1}
-  outlineWidth: 8
+  outlineColor: {r: 0.37566984, g: 0.11747954, b: 0.4528302, a: 1}
+  outlineWidth: 6
   fadeDuration: 0.12
 --- !u!1 &1711315772616833169
 GameObject:
@@ -480,8 +480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2bd3c6a653114d4580c02a502595863, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HoverOutline
-  outlineColor: {r: 0.77461636, g: 0.43454075, b: 0.8773585, a: 1}
-  outlineWidth: 8
+  outlineColor: {r: 0.37566984, g: 0.11747954, b: 0.4528302, a: 1}
+  outlineWidth: 6
   fadeDuration: 0.12
 --- !u!1 &5757727396816207542
 GameObject:

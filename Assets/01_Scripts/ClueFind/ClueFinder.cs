@@ -133,6 +133,7 @@ public class ClueFinder : MonoBehaviour
         {
             clueZoomImage.sprite = clueSprite;
             clueZoomImage.enabled = clueSprite != null;
+            clueZoomImage.preserveAspect = true; // 원본 스프라이트 비율을 유지한 채 확대 영역 안에 맞춘다
         }
 
         if (clueZoomText != null)

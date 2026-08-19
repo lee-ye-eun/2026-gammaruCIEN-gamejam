@@ -203,10 +203,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 776894022}
     m_Modifications:
     - target: {fileID: 666594933519061110, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
-      propertyPath: clueZoomImage
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 666594933519061110, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
       propertyPath: 'clueButtons.Array.data[0]'
       value: 
       objectReference: {fileID: 865659701}
@@ -303,8 +299,7 @@ PrefabInstance:
       value: ClueFindingPanel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 8231920789372933270, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22f88f799926349c69bef23c9d2405d0, type: 3}
@@ -517,10 +512,6 @@ PrefabInstance:
     - target: {fileID: 6919932121204017256, guid: 595d668cc46e04af5863a59150bdc119, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7821373437634576151, guid: 595d668cc46e04af5863a59150bdc119, type: 3}
-      propertyPath: m_text
-      value: "\uD574\uC11D\uD558\uAE30"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1568,10 +1559,10 @@ MonoBehaviour:
   currentState: 0
   customerView: {fileID: 1953623664}
   customers:
-  - {fileID: 11400000, guid: 5d96b1a2a051ff849aff527201d32221, type: 2}
   - {fileID: 11400000, guid: 043014ebb3cf84d10b9370647720ac5d, type: 2}
   - {fileID: 11400000, guid: 08cb62037f4a3409781203e07e26c9ca, type: 2}
   - {fileID: 11400000, guid: 7a66e4a5065b0bc43857933fd9aebbbb, type: 2}
+  - {fileID: 11400000, guid: 5d96b1a2a051ff849aff527201d32221, type: 2}
   - {fileID: 11400000, guid: d7941134572dedd4c92618fe058a670c, type: 2}
   dialoguePanel: {fileID: 775061171}
   dialogueManager: {fileID: 775061173}

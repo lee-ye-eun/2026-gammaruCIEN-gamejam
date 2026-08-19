@@ -28,7 +28,7 @@ MonoBehaviour:
   presentCard: {fileID: 11400000, guid: 1919dda70483b46fabee1ecf46f9cda8, type: 2}
   adviceCard: {fileID: 11400000, guid: 47e9bbcbcb2f645048ac3670f97440c4, type: 2}
   clueVisuals:
-  - sprite: {fileID: 21300000, guid: 2cb01a28681c614409498cfbb7f29cb6, type: 3}
+  - sprite: {fileID: 21300000, guid: 6b8fc2826ece8f94a940b424b98c35aa, type: 3}
     position: {x: 0, y: 0}
     zoomSprite: {fileID: 21300000, guid: 28f2e680e32880649bba0cbcae007459, type: 3}
   - sprite: {fileID: 21300000, guid: 9941348c419a596479342880bc20a6ed, type: 3}
