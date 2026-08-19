@@ -6,7 +6,8 @@ using TMPro;
 // 대사창/질문창(다이얼로그 패널의 두 자식) 출력 + 화면 터치 감지를 담당.
 // 다이얼로그 패널 자체의 활성 상태는 GameFlowManager가 관리하지만, 그 안에서 대사창/질문창 중 뭘 보여줄지는 여기서 결정한다.
 // 흐름 전환은 이벤트가 아니라 GameFlowManager.Instance.ChangeState(...)를 직접 호출해서 처리한다.
-// 질문창의 "다음(질문 그만)" 버튼은 인스펙터에서 이 컴포넌트의 FinishQuestioning()을 참조하도록 연결한다.
+// CardSelecting 상태에서는 질문창이 카드덱 패널과 함께 계속 떠 있다: 질문을 클릭하면 답변(대사창)을 보여주고,
+// 터치로 넘기면 다시 질문창으로 돌아간다 (카드덱 패널 자체는 GameFlowManager가 항상 켜둔 채로 둔다).
 public class DialogueManager : MonoBehaviour
 {
     // 지금 대사창(일반 텍스트)을 보여주는 중인지, 질문 선택 중인지, 선택한 질문의 답을 보여주는 중인지
@@ -123,25 +124,15 @@ public class DialogueManager : MonoBehaviour
         if (GameManager.Instance != null) GameManager.Instance.IncrementQuestionAskedCount();
     }
 
-    // 질문창의 "다음(질문 그만)" 버튼 onClick에 연결 -> 카드 덱으로 전환
-    public void FinishQuestioning()
-    {
-        if (mode != Mode.SelectingQuestion) return;
-
-        isTouchActive = false;
-        if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.CardSelecting);
-    }
-
     private void AdvanceTouch()
     {
         isTouchActive = false;
 
         if (mode == Mode.ShowingAnswer)
         {
-            // 질문을 1회 답변까지 보면 곧장 카드 덱으로 넘어간다 (이미 뽑혀 있으면 GameFlowManager가 재준비 없이 패널만 보여줌).
-            // 더 물어보고 싶으면 카드덱 패널의 "질문하기" 버튼으로 다시 이 상태로 돌아올 수 있다.
-            mode = Mode.Normal;
-            if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.CardSelecting);
+            // 답변을 봤다면 다시 질문 선택으로 돌아간다 (카드덱 패널은 그 아래서 계속 활성화된 채로 유지됨)
+            mode = Mode.SelectingQuestion;
+            SetBoxes(dialogueOn: false, questionOn: true);
             return;
         }
 

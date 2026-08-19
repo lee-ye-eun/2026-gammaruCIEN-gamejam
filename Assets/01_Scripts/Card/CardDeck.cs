@@ -23,9 +23,6 @@ public class CardDeck : MonoBehaviour
     [Header("3장 선택 완료 시 활성화할 버튼")]
     [SerializeField] private Button nextButton;
 
-    [Header("질문하기 (질문 패널을 다시 열어 추가 질문)")]
-    [SerializeField] private Button askAgainButton;
-
     [Header("연출")]
     [SerializeField] private float drawDuration = 0.22f;
     [SerializeField] private float drawInterval = 0.04f;
@@ -53,7 +50,6 @@ public class CardDeck : MonoBehaviour
         ? parentCanvas.worldCamera
         : null;
     public bool CanInteractWithCards => cardsDrawn && !isDrawing && !isResolving;
-    public bool CardsDrawn => cardsDrawn;
 
     private void Awake()
     {
@@ -62,7 +58,6 @@ public class CardDeck : MonoBehaviour
         SetupCards();
 
         if (nextButton != null) nextButton.onClick.AddListener(ConfirmSelection);
-        if (askAgainButton != null) askAgainButton.onClick.AddListener(OpenQuestioning);
 
         UpdateActionButtons();
     }
@@ -70,7 +65,6 @@ public class CardDeck : MonoBehaviour
     private void OnDestroy()
     {
         if (nextButton != null) nextButton.onClick.RemoveListener(ConfirmSelection);
-        if (askAgainButton != null) askAgainButton.onClick.RemoveListener(OpenQuestioning);
 
         foreach (var card in cards)
         {
@@ -103,19 +97,12 @@ public class CardDeck : MonoBehaviour
         UpdateActionButtons();
     }
 
-    // 질문 답변을 하나 보고 나면 GameFlowManager가 자동으로 호출한다. 이미 뽑혀 있으면 아무 일도 하지 않는다.
+    // 카드덱 상태 진입 시 GameFlowManager가 자동으로 호출한다. 이미 뽑혀 있으면 아무 일도 하지 않는다.
     public void DrawCards()
     {
         if (cardsDrawn || isDrawing || isResolving || cards.Count == 0) return;
 
         StartCoroutine(DrawCardsRoutine());
-    }
-
-    // "질문하기" 버튼 onClick에 연결: 질문 패널을 다시 열어 추가로 질문할 수 있게 한다.
-    public void OpenQuestioning()
-    {
-        if (!CanInteractWithCards) return;
-        if (GameFlowManager.Instance != null) GameFlowManager.Instance.ChangeState(GameFlowManager.GameState.Questioning);
     }
 
     public bool PlaceCardInSlot(CardView card, CardSelectionSlot targetSlot)
@@ -332,11 +319,6 @@ public class CardDeck : MonoBehaviour
             bool showNextButton = cardsDrawn || isResolving;
             nextButton.gameObject.SetActive(showNextButton);
             nextButton.interactable = showNextButton && !isResolving && SelectedCards.Count == MaxSelectable;
-        }
-
-        if (askAgainButton != null)
-        {
-            askAgainButton.interactable = CanInteractWithCards;
         }
     }
 
