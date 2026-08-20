@@ -34,7 +34,7 @@ MonoBehaviour:
   clueVisuals:
   - sprite: {fileID: 21300000, guid: 72e3a05928b85db4680b1ca965b30dcb, type: 3}
     position: {x: 0, y: 0}
-    zoomSprite: {fileID: 0}
+    zoomSprite: {fileID: 21300000, guid: 2545b99c7f327a540b813ee1e0f23d3d, type: 3}
   - sprite: {fileID: 21300000, guid: 2000507997a6e704b90269319b23405b, type: 3}
     position: {x: 0, y: -430}
     zoomSprite: {fileID: 21300000, guid: 9bec3ac04b547a44d93dc352bc77e583, type: 3}
