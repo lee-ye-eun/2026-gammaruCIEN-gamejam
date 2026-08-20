@@ -14,10 +14,31 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StoryData
   dialogueCsv: {fileID: 4900000, guid: 112efae1ff3f64c2f93977d08b7b66bf, type: 3}
   imageEntries:
-  - key: one
-    sprite: {fileID: 21300000, guid: c75c28030b1684fe4bf4cb8257d1266b, type: 3}
-  - key: two
-    sprite: {fileID: 21300000, guid: f2a4ec76fbfea480a96a690543579648, type: 3}
-  - key: three
-    sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  - key: Man
+    sprite: {fileID: 0}
+    texture: {fileID: 2800000, guid: f80bc2d9bcf485b4b9b2a72aab059186, type: 3}
+  - key: Man1
+    sprite: {fileID: 0}
+    texture: {fileID: 2800000, guid: 64ebe4b1fa535444b86a827226faf90c, type: 3}
+  - key: Man2
+    sprite: {fileID: 0}
+    texture: {fileID: 2800000, guid: d3907659086eccf41903fa6bf96b53e9, type: 3}
+  - key: Man3
+    sprite: {fileID: 0}
+    texture: {fileID: 2800000, guid: e3bfbb7d5b2f0eb40a7baeffdc13e0d3, type: 3}
+  - key: Money
+    sprite: {fileID: 0}
+    texture: {fileID: 2800000, guid: ad690b1e3962adc4fa443e3d2bd2074c, type: 3}
+  - key: Black
+    sprite: {fileID: 0}
+    texture: {fileID: 2800000, guid: d667b885007939e45be61df4a09f5f25, type: 3}
+  - key: Card
+    sprite: {fileID: 0}
+    texture: {fileID: 2800000, guid: c4d30fa34a33fa247933f084aa741c37, type: 3}
+  - key: Glass
+    sprite: {fileID: 0}
+    texture: {fileID: 2800000, guid: 3c56286da50c837439f3413e4117053c, type: 3}
+  - key: Start
+    sprite: {fileID: 0}
+    texture: {fileID: 2800000, guid: 4b34b66c057f93d408e52ddcb3622a84, type: 3}
   nextSceneName: GameScene

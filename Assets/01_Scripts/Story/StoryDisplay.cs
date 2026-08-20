@@ -18,7 +18,7 @@ public class StoryDisplay : MonoBehaviour
     private const string StopBgmKeyword = "stop";    // BGM 정지
 
     [Header("출력 UI")]
-    [SerializeField] private Image storyImage;
+    [SerializeField] private RawImage storyImage;
     [SerializeField] private GameObject dialogueBox; // 대사창 전체 (발화자란 + 텍스트란을 담은 오브젝트)
     [SerializeField] private TMP_Text speakerText;
     [SerializeField] private TMP_Text dialogueText;
@@ -104,8 +104,8 @@ public class StoryDisplay : MonoBehaviour
     {
         if (line == null || string.IsNullOrEmpty(line.imageKey)) return;
 
-        Sprite sprite = currentStory.GetImage(line.imageKey.Trim());
-        if (storyImage != null && sprite != null) storyImage.sprite = sprite;
+        Texture2D texture = currentStory.GetImage(line.imageKey.Trim());
+        if (storyImage != null && texture != null) storyImage.texture = texture;
     }
 
     // effect 칸이 비어있으면 아무 연출 없음. fadeout/fadein이면 화면 페이드 연출을 재생한다.
