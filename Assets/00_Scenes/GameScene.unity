@@ -2127,6 +2127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SuspicionGaugeAnimator
   fillImage: {fileID: 308712019}
+  valueText: {fileID: 1426584751}
   suspicionUnitsPerSecond: 40
   maxWidth: 387.0793
 --- !u!1001 &2213211618023774187

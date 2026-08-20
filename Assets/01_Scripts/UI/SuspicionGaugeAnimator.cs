@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 [DisallowMultipleComponent]
 public class SuspicionGaugeAnimator : MonoBehaviour
@@ -7,6 +8,7 @@ public class SuspicionGaugeAnimator : MonoBehaviour
     private const float MaxDisplayedSuspicion = 100f;
 
     [SerializeField] private Image fillImage;
+    [SerializeField] private TMP_Text valueText;
     [SerializeField, Min(0f)] private float suspicionUnitsPerSecond = 40f;
     [SerializeField, Min(0f)] private float maxWidth;
 
@@ -80,5 +82,10 @@ public class SuspicionGaugeAnimator : MonoBehaviour
         fillRectTransform.SetSizeWithCurrentAnchors(
             RectTransform.Axis.Horizontal,
             displayedWidth);
+
+        if (valueText != null)
+        {
+            valueText.text = $"의심도 {Mathf.RoundToInt(displayedSuspicion)}/100";
+        }
     }
 }
