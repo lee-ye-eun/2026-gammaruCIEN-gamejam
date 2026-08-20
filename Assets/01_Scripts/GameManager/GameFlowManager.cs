@@ -30,6 +30,7 @@ public class GameFlowManager : MonoBehaviour
     private CustomerData currentCustomer;
     private int customerIndex = -1;
     private int pendingCardResultSuspicionDelta; // 카드 결과로 정해진 의심도 변화량. 결과창 터치 시에만 실제로 반영됨.
+    private int suspicionLevelAtRoundStart; // 이번 손님 라운드 시작 시점의 전체 의심도 스냅샷 (결과창의 "이전" 값)
     private readonly List<QuestionLogEntry> questionLogs = new List<QuestionLogEntry>();
 
     public string CurrentWorryText => currentCustomer != null ? currentCustomer.Dialogue.worryText : string.Empty;
@@ -168,6 +169,8 @@ public class GameFlowManager : MonoBehaviour
 
         currentCustomer = customers[customerIndex];
         questionLogs.Clear();
+        // 이번 라운드 동안 질문/카드로 의심도가 바뀌기 전, 지금 값을 스냅샷으로 저장해둔다 (결과창 "이전" 표시용).
+        suspicionLevelAtRoundStart = GameManager.Instance != null ? GameManager.Instance.SuspicionLevel : 0;
         if (customerView != null) customerView.SetData(currentCustomer);
         // 배경 텍스처만 갈아끼운다. 크기/위치는 씬에서 맞춰둔 값을 그대로 쓰므로 RectTransform은 손대지 않는다.
         if (backgroundImage != null && currentCustomer.background != null) backgroundImage.texture = currentCustomer.background;
@@ -285,13 +288,14 @@ public class GameFlowManager : MonoBehaviour
 
         if (GameManager.Instance != null)
         {
-            // 현재 손님의 의심도 = 이번 라운드 질문으로 이미 반영된 값 + 아직 반영 전인 카드 결과 변화량.
-            int previewCustomerSuspicion = Mathf.Max(0, GameManager.Instance.CurrentCustomerSuspicion + pendingCardResultSuspicionDelta);
             // 현재 의심도(전체) = 카드 결과 변화량까지 반영됐을 때의 미리보기 값.
             int previewSuspicionLevel = Mathf.Max(0, GameManager.Instance.SuspicionLevel + pendingCardResultSuspicionDelta);
-            int beforeSuspicionLevel = Mathf.Max(0, previewSuspicionLevel - previewCustomerSuspicion);
+            // 이전 의심도 = 라운드 시작 시점에 찍어둔 스냅샷을 그대로 쓴다.
+            // (SuspicionLevel - CurrentCustomerSuspicion으로 역산하면, 의심도가 낮을 때 카드 결과로 크게 깎이는
+            // 경우 두 값이 각각 0으로 클램프되면서 실제보다 낮게 나오는 오차가 생길 수 있어 스냅샷 방식으로 바꿈)
+            int beforeSuspicionLevel = suspicionLevelAtRoundStart;
 
-            string text = $"의심도 변화: {beforeSuspicionLevel} -> {previewSuspicionLevel}";
+            string text = $"결과로 인해 의심도가 {pendingCardResultSuspicionDelta} 만큼 변화하였습니다. \n의심도 변화: {beforeSuspicionLevel} -> {previewSuspicionLevel}";
             if (resultManager != null) resultManager.ShowResult(text);
 
             GameManager.Instance.ResetRoundStats();

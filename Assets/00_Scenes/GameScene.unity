@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &21206031
 RectTransform:
   m_ObjectHideFlags: 0
@@ -390,6 +390,14 @@ PrefabInstance:
     - target: {fileID: 2431780803108169746, guid: 0c4893446442f467f876bef5fd2909c5, type: 3}
       propertyPath: m_Name
       value: ResultPanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4638030318788880229, guid: 0c4893446442f467f876bef5fd2909c5, type: 3}
+      propertyPath: m_fontSize
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4638030318788880229, guid: 0c4893446442f467f876bef5fd2909c5, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 5618822449074916376, guid: 0c4893446442f467f876bef5fd2909c5, type: 3}
       propertyPath: m_Pivot.x
