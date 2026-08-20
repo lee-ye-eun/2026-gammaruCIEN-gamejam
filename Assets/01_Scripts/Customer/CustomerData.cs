@@ -22,6 +22,14 @@ public class CustomerData : ScriptableObject
     public string situationDescription;
     public Sprite portrait;
 
+    [Header("표정 변화 (카드 결과 연출 중에만 사용, 평소엔 portrait)")]
+    [Tooltip("주인공의 해석 대사 3개가 끝나고 손님 대사로 \"...\"이 출력되는 순간 표시")]
+    public Sprite expression1;
+    [Tooltip("맞춘 카드가 3개 전부일 때(정답) 표시")]
+    public Sprite expression2;
+    [Tooltip("맞춘 카드가 3개 미만일 때(오답 1개 이상) 표시")]
+    public Sprite expression3;
+
     [Header("손님별 배경 아트 (Assets/03_Sprites/BackGround). 씬의 BackGround 크기/위치는 그대로 두고 텍스처만 교체된다")]
     public Texture background;
 
@@ -52,5 +60,11 @@ public class CustomerData : ScriptableObject
     {
         int index = Mathf.Clamp(matchCount, 0, 3);
         return Dialogue.reactions[index] ?? string.Empty;
+    }
+
+    // 카드 결과 표정: 3개 전부 맞았으면 expression2, 그 미만이면(1~2개 또는 전부 오답) 무조건 expression3.
+    public Sprite GetResultExpression(int matchCount)
+    {
+        return matchCount >= 3 ? expression2 : expression3;
     }
 }

@@ -25,19 +25,19 @@ MonoBehaviour:
     \uAE09\uD574\uC84C\uC9C0\uB9CC \uC544\uC9C1 \uC778\uC0AC \uC815\uB3C4\uB9CC \uD558\uB294
     \uC0AC\uC774\uC774\uBBC0\uB85C \uC131\uAE09\uD558\uAC8C \uACE0\uBC31\uD558\uC9C0
     \uC54A\uC544\uC57C \uD55C\uB2E4."
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: dacb430b5702c6c42aa4e8c869499230, type: 3}
   background: {fileID: 2800000, guid: 69be5a915fc3a443c80dfe4c5fdb5d61, type: 3}
   dialogueCsv: {fileID: 4900000, guid: ff11d2e990bad6f41b193f470683f25f, type: 3}
   causeCard: {fileID: 11400000, guid: 552e233c27ba8448088038b68babb595, type: 2}
   presentCard: {fileID: 11400000, guid: be672a521513049a9a29d6fa0bd7b42b, type: 2}
   adviceCard: {fileID: 11400000, guid: 64ee44da0823e4776a68fe02959aba57, type: 2}
   clueVisuals:
-  - sprite: {fileID: 0}
+  - sprite: {fileID: 21300000, guid: 72e3a05928b85db4680b1ca965b30dcb, type: 3}
     position: {x: 0, y: 0}
-    zoomSprite: {fileID: 21300000, guid: e39873ff496d3c34fbf6d5c31b60f5fa, type: 3}
-  - sprite: {fileID: 0}
-    position: {x: 0, y: 0}
-    zoomSprite: {fileID: 21300000, guid: 59adcba0b97da8d4598264f38fe579e7, type: 3}
-  - sprite: {fileID: 0}
-    position: {x: 0, y: 0}
-    zoomSprite: {fileID: 21300000, guid: edd96a155843dbf44991c50fd6264d17, type: 3}
+    zoomSprite: {fileID: 0}
+  - sprite: {fileID: 21300000, guid: 2000507997a6e704b90269319b23405b, type: 3}
+    position: {x: 0, y: -430}
+    zoomSprite: {fileID: 21300000, guid: 2000507997a6e704b90269319b23405b, type: 3}
+  - sprite: {fileID: 21300000, guid: 91774b1df916aed4bac76bcbcf720f4f, type: 3}
+    position: {x: 300, y: -325}
+    zoomSprite: {fileID: 21300000, guid: eeea3e5fe67d54f4cace12b800ad5dbc, type: 3}

@@ -204,8 +204,9 @@ public class GameFlowManager : MonoBehaviour
     }
 
     // 카드 제출 후: 선택한 카드 3장의 위치별 해석(원인/현재/조언, 화자는 주인공)을 순서대로 보여준 다음,
-    // 맞춘 카드 개수에 따른 손님의 반응 대사를 보여준다. 의심도 변화량은 여기서 정해두기만 하고,
-    // 실제로 반영하지는 않는다 (결과창을 터치해 넘어가려는 시점에 CommitCardResultSuspicion()이 반영함).
+    // 손님 대사로 "..."(표정1) -> 맞춘 개수에 따른 손님 반응 대사(3개 전부면 표정2, 아니면 표정3)를 보여준다.
+    // 의심도 변화량은 여기서 정해두기만 하고, 실제로 반영하지는 않는다
+    // (결과창을 터치해 넘어가려는 시점에 CommitCardResultSuspicion()이 반영함).
     private void EnterShowingCardResult()
     {
         SetPanels(dialogue: true, clueFinding: false, cardDeckOn: false, result: false);
@@ -215,9 +216,13 @@ public class GameFlowManager : MonoBehaviour
         pendingCardResultSuspicionDelta = GetCardResultSuspicionDelta(wrongCount);
 
         string reaction = currentCustomer != null ? currentCustomer.GetReaction(matchCount) : string.Empty;
+        CustomerData customerForExpression = currentCustomer;
 
-        List<string> lines = GetSelectedCardMeaningLines();
-        lines.Add(reaction);
+        List<(string text, string speaker, System.Action onShow)> lines = GetSelectedCardMeaningLines();
+        lines.Add(("...", DialogueManager.CustomerSpeakerLabel,
+            () => SetCustomerExpression(customerForExpression != null ? customerForExpression.expression1 : null)));
+        lines.Add((reaction, DialogueManager.CustomerSpeakerLabel,
+            () => SetCustomerExpression(customerForExpression != null ? customerForExpression.GetResultExpression(matchCount) : null)));
 
         if (dialogueManager != null)
         {
@@ -225,11 +230,16 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    // 선택된 3장의 카드를 슬롯 순서(원인/현재/조언)대로, 그 위치에 해당하는 해석 대사만 뽑아 모은다.
-    // 카드에 그 위치의 해석이 비어 있으면 건너뛴다.
-    private List<string> GetSelectedCardMeaningLines()
+    private void SetCustomerExpression(Sprite expressionSprite)
     {
-        var lines = new List<string>();
+        if (customerView != null) customerView.SetExpression(expressionSprite);
+    }
+
+    // 선택된 3장의 카드를 슬롯 순서(원인/현재/조언)대로, 그 위치에 해당하는 해석 대사만 뽑아 모은다. 화자는 주인공.
+    // 카드에 그 위치의 해석이 비어 있으면 건너뛴다.
+    private List<(string text, string speaker, System.Action onShow)> GetSelectedCardMeaningLines()
+    {
+        var lines = new List<(string text, string speaker, System.Action onShow)>();
         if (cardDeck == null) return lines;
 
         IReadOnlyList<CardView> selected = cardDeck.SelectedCards;
@@ -239,11 +249,11 @@ public class GameFlowManager : MonoBehaviour
         return lines;
     }
 
-    private static void AddMeaningLine(List<string> lines, IReadOnlyList<CardView> selected, int index, System.Func<CardData, string> pickMeaning)
+    private static void AddMeaningLine(List<(string text, string speaker, System.Action onShow)> lines, IReadOnlyList<CardView> selected, int index, System.Func<CardData, string> pickMeaning)
     {
         CardData data = index < selected.Count && selected[index] != null ? selected[index].Data : null;
         string line = data != null ? pickMeaning(data) : null;
-        if (!string.IsNullOrWhiteSpace(line)) lines.Add(line);
+        if (!string.IsNullOrWhiteSpace(line)) lines.Add((line, DialogueManager.ProtagonistSpeakerLabel, null));
     }
 
     private int GetCardResultSuspicionDelta(int wrongCount)
