@@ -480,6 +480,35 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c4893446442f467f876bef5fd2909c5, type: 3}
+--- !u!1001 &555000001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 776894022}
+    m_Modifications: []
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2c61ab5c11a042d7b3f3d3dc38657221, type: 3}
+--- !u!114 &555000002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 100005, guid: 2c61ab5c11a042d7b3f3d3dc38657221, type: 3}
+  m_PrefabInstance: {fileID: 555000001}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d201c64176258476d8cba45da95b2825, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialPanel
+--- !u!224 &555000003 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 100002, guid: 2c61ab5c11a042d7b3f3d3dc38657221, type: 3}
+  m_PrefabInstance: {fileID: 555000001}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &569587965
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,7 +684,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3072809585265651122, guid: 595d668cc46e04af5863a59150bdc119, type: 3}
       propertyPath: m_SortingOrder
-      value: 120
+      value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 6244271059909329613, guid: 595d668cc46e04af5863a59150bdc119, type: 3}
       propertyPath: m_Name
@@ -872,6 +901,7 @@ RectTransform:
   - {fileID: 604251297}
   - {fileID: 2005642035}
   - {fileID: 960162115}
+  - {fileID: 555000003}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1261,7 +1291,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6069015058958563739, guid: 1f22b6d5da6854e9f8101186fa0fdc8c, type: 3}
       propertyPath: m_SortingOrder
-      value: 110
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 7307420526005663394, guid: 1f22b6d5da6854e9f8101186fa0fdc8c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1719,24 +1749,6 @@ MonoBehaviour:
   resultPanel: {fileID: 604251296}
   resultManager: {fileID: 604251300}
   tutorialPanel: {fileID: 555000002}
---- !u!1001 &555000001
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 776894022}
-    m_Modifications: []
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2c61ab5c11a042d7b3f3d3dc38657221, type: 3}
---- !u!114 &555000002 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 100005, guid: 2c61ab5c11a042d7b3f3d3dc38657221, type: 3}
-  m_PrefabInstance: {fileID: 555000001}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1528409748
 GameObject:
   m_ObjectHideFlags: 0
@@ -2492,7 +2504,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8466069267049363925, guid: 61b7b8ef8c0694849a695779d318c09d, type: 3}
       propertyPath: m_SortingOrder
-      value: 130
+      value: 140
       objectReference: {fileID: 0}
     - target: {fileID: 8503652030850537179, guid: 61b7b8ef8c0694849a695779d318c09d, type: 3}
       propertyPath: m_Name

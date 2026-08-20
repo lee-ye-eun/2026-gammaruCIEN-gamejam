@@ -285,8 +285,13 @@ public class GameFlowManager : MonoBehaviour
 
         if (GameManager.Instance != null)
         {
+            // 현재 손님의 의심도 = 이번 라운드 질문으로 이미 반영된 값 + 아직 반영 전인 카드 결과 변화량.
+            int previewCustomerSuspicion = Mathf.Max(0, GameManager.Instance.CurrentCustomerSuspicion + pendingCardResultSuspicionDelta);
+            // 현재 의심도(전체) = 카드 결과 변화량까지 반영됐을 때의 미리보기 값.
             int previewSuspicionLevel = Mathf.Max(0, GameManager.Instance.SuspicionLevel + pendingCardResultSuspicionDelta);
-            string text = $"의심도가 {previewSuspicionLevel} 되었습니다.";
+            int beforeSuspicionLevel = Mathf.Max(0, previewSuspicionLevel - previewCustomerSuspicion);
+
+            string text = $"의심도 변화: {beforeSuspicionLevel} -> {previewSuspicionLevel}";
             if (resultManager != null) resultManager.ShowResult(text);
 
             GameManager.Instance.ResetRoundStats();
