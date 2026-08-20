@@ -1141,6 +1141,8 @@ MonoBehaviour:
   xRayOnText: "\uD22C\uC2DC\uACBD ON"
   xRayOffText: "\uD22C\uC2DC\uACBD OFF"
   xRayToggleSfxKey: piiik
+  xRayNormalOverlayColor: {r: 0.05, g: 0.82, b: 0.35, a: 0.24}
+  xRayDangerOverlayColor: {r: 0.82, g: 0.42, b: 0.22, a: 0.24}
   cardDrawSfxKey: drrrrr
   cardFlipSfxKey: chak
   cardPlaceSfxKey: toook

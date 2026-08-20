@@ -36,6 +36,9 @@ public class CardDeck : MonoBehaviour
     [SerializeField] private string xRayOnText = "투시경 ON";
     [SerializeField] private string xRayOffText = "투시경 OFF";
     [SerializeField] private string xRayToggleSfxKey = "piiik";
+    [Header("투시경 Overlay 색상")]
+    [SerializeField] private Color xRayNormalOverlayColor = new Color(0.05f, 0.82f, 0.35f, 0.24f);
+    [SerializeField] private Color xRayDangerOverlayColor = new Color(0.82f, 0.42f, 0.22f, 0.24f);
     [SerializeField, Min(0f)] private float xRayGraceDuration = 8f;
     [SerializeField, Min(0.01f)] private float xRaySuspicionInterval = 5f;
     [SerializeField, Min(0)] private int xRaySuspicionPerInterval = 2;
@@ -53,6 +56,7 @@ public class CardDeck : MonoBehaviour
     private bool xRayActive;
     private float xRayUsageTime;
     private float xRayPenaltyTime;
+    private Image xRayOverlayImage;
 
     public IReadOnlyList<CardView> SelectedCards => selectionSlots
         .Where(slot => slot != null && slot.CurrentCard != null)
@@ -72,6 +76,7 @@ public class CardDeck : MonoBehaviour
     private void Awake()
     {
         parentCanvas = GetComponentInParent<Canvas>();
+        xRayOverlayImage = xRayOverlay != null ? xRayOverlay.GetComponent<Image>() : null;
         SetupSlots();
         SetupCards();
 
@@ -387,10 +392,21 @@ public class CardDeck : MonoBehaviour
 
     private void UpdateXRayVisual()
     {
+        UpdateXRayOverlayColor();
+
         if (xRayButtonLabel != null)
         {
             xRayButtonLabel.text = xRayActive ? xRayOnText : xRayOffText;
         }
+    }
+
+    private void UpdateXRayOverlayColor()
+    {
+        if (xRayOverlayImage == null) return;
+
+        float graceDuration = Mathf.Max(0f, xRayGraceDuration);
+        bool danger = xRayActive && xRayUsageTime >= graceDuration;
+        xRayOverlayImage.color = danger ? xRayDangerOverlayColor : xRayNormalOverlayColor;
     }
 
     private void UpdateXRaySuspicion()
@@ -402,6 +418,7 @@ public class CardDeck : MonoBehaviour
 
         float previousUsageTime = xRayUsageTime;
         xRayUsageTime += deltaTime;
+        UpdateXRayOverlayColor();
 
         float graceDuration = Mathf.Max(0f, xRayGraceDuration);
         float previousPenaltyTime = Mathf.Max(0f, previousUsageTime - graceDuration);
