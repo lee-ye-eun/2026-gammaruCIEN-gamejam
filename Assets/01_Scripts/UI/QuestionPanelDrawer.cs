@@ -1,11 +1,9 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-// 질문창을 화면 위로 숨겨두는 서랍(drawer)으로 만든다.
-// 오른쪽 상단 끝의 납작한 역삼각형 탭을 누르면 질문창이 아래로 내려오고,
-// 허공(질문창/탭 바깥)을 누르면 다시 위로 올라가며 사라진다.
+// 질문 차례에 질문창을 열린 위치로 표시한다.
+// 역삼각형 탭 오브젝트는 기존 계층과 참조를 유지하되, 열린 질문창 위에서는 숨긴다.
 //
 // 다이얼로그 패널 루트에 붙인다. 질문창(questionPanel)은 질문 차례가 아닐 때 DialogueManager가 꺼버리므로,
 // 항상 켜져 있는 루트에서 관리해야 탭의 표시 여부까지 따라갈 수 있다.
@@ -24,11 +22,9 @@ public class QuestionPanelDrawer : MonoBehaviour
     [SerializeField] private float slideDuration = 0.25f;
 
     private RectTransform canvasRect;
-    private Camera uiCamera;
 
     private Vector2 openPosition;
     private bool isOpen;
-    private int openedFrame = -1; // 연 프레임. 같은 프레임의 클릭이 곧바로 '허공 클릭'으로 잡혀 닫히는 걸 막는다.
     private Coroutine slideRoutine;
 
     private void Awake()
@@ -40,7 +36,6 @@ public class QuestionPanelDrawer : MonoBehaviour
         {
             canvas = canvas.rootCanvas;
             canvasRect = (RectTransform)canvas.transform;
-            uiCamera = canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
         }
 
         // 씬에 배치해둔 위치를 '열린 상태'로 삼는다. 닫힌 위치는 캔버스 크기에 의존하므로 그때그때 계산한다
@@ -50,7 +45,7 @@ public class QuestionPanelDrawer : MonoBehaviour
         if (matchTabColorToPanel) ApplyPanelColorToTab();
         if (tabButton != null) tabButton.onClick.AddListener(Toggle);
 
-        SetOpen(false, instant: true);
+        SetOpen(true, instant: true);
     }
 
     private void OnDestroy()
@@ -70,28 +65,11 @@ public class QuestionPanelDrawer : MonoBehaviour
     {
         if (questionPanel == null || tab == null) return;
 
-        // 탭은 '질문 차례이면서 서랍이 닫혀 있을 때'만 보인다.
-        // 질문창이 내려와 있는 동안에는 탭을 숨기고, 허공을 눌러서 닫는다.
+        // 질문 차례가 되면 질문창은 열린 위치에 그대로 보이고, 질문 차례가 아니면
+        // DialogueManager가 questionPanel 자체를 꺼서 함께 숨긴다.
         bool questionTurn = questionPanel.gameObject.activeInHierarchy;
         bool tabVisible = questionTurn && !isOpen;
         if (tab.gameObject.activeSelf != tabVisible) tab.gameObject.SetActive(tabVisible);
-        if (!questionTurn || !isOpen) return;
-
-        // 탭을 눌러 연 그 프레임의 클릭은 무시한다 (버튼 콜백과 Update의 실행 순서가 보장되지 않아, 열자마자 닫힐 수 있다).
-        if (Time.frameCount == openedFrame) return;
-
-        // 열려 있는 동안 허공을 누르면 닫는다 (질문창 안을 누른 경우는 제외).
-        if (Pointer.current == null || !Pointer.current.press.wasPressedThisFrame) return;
-
-        Vector2 screenPoint = Pointer.current.position.ReadValue();
-        if (IsPointerOver(questionPanel, screenPoint)) return;
-
-        SetOpen(false, instant: false);
-    }
-
-    private bool IsPointerOver(RectTransform target, Vector2 screenPoint)
-    {
-        return target != null && RectTransformUtility.RectangleContainsScreenPoint(target, screenPoint, uiCamera);
     }
 
     public void Toggle()
@@ -113,7 +91,6 @@ public class QuestionPanelDrawer : MonoBehaviour
     private void SetOpen(bool open, bool instant)
     {
         isOpen = open;
-        if (open) openedFrame = Time.frameCount;
         Vector2 destination = open ? openPosition : ClosedPosition;
 
         if (slideRoutine != null)
