@@ -276,7 +276,8 @@ public class GameFlowManager : MonoBehaviour
 
         if (GameManager.Instance != null)
         {
-            string text = $"의심도가 {pendingCardResultSuspicionDelta}만큼 증가합니다.";
+            int previewSuspicionLevel = Mathf.Max(0, GameManager.Instance.SuspicionLevel + pendingCardResultSuspicionDelta);
+            string text = $"의심도가 {previewSuspicionLevel} 되었습니다.";
             if (resultManager != null) resultManager.ShowResult(text);
 
             GameManager.Instance.ResetRoundStats();
