@@ -22,19 +22,22 @@ MonoBehaviour:
   situationDescription: "\uB8F8\uBA54\uC774\uD2B8\uC640 \uC2F8\uC6B4 \uB4A4 \uB0C9\uC804
     \uC911\uC774\uB2E4. \uD53C\uD558\uC9C0 \uB9D0\uACE0 \uB300\uD654\uD574\uC57C
     \uD55C\uB2E4."
-  portrait: {fileID: 0}
+  portrait: {fileID: 21300000, guid: dacb430b5702c6c42aa4e8c869499230, type: 3}
+  expression1: {fileID: 21300000, guid: 0e806d5e3e906f146ad473982cb2f346, type: 3}
+  expression2: {fileID: 21300000, guid: 0e806d5e3e906f146ad473982cb2f346, type: 3}
+  expression3: {fileID: 21300000, guid: ebb1a3d3f277a0b409f07ff54dfc64df, type: 3}
   background: {fileID: 2800000, guid: 00b4e88f470344a20be57bea28b65906, type: 3}
   dialogueCsv: {fileID: 4900000, guid: 8cda3a953f5c4da42aa23180f93b5658, type: 3}
   causeCard: {fileID: 11400000, guid: be672a521513049a9a29d6fa0bd7b42b, type: 2}
   presentCard: {fileID: 11400000, guid: 64ee44da0823e4776a68fe02959aba57, type: 2}
   adviceCard: {fileID: 11400000, guid: 47e9bbcbcb2f645048ac3670f97440c4, type: 2}
   clueVisuals:
-  - sprite: {fileID: 0}
-    position: {x: 0, y: 0}
-    zoomSprite: {fileID: 21300000, guid: eeea3e5fe67d54f4cace12b800ad5dbc, type: 3}
-  - sprite: {fileID: 0}
-    position: {x: 0, y: 0}
-    zoomSprite: {fileID: 21300000, guid: 9bec3ac04b547a44d93dc352bc77e583, type: 3}
-  - sprite: {fileID: 0}
+  - sprite: {fileID: 21300000, guid: 72e3a05928b85db4680b1ca965b30dcb, type: 3}
     position: {x: 0, y: 0}
     zoomSprite: {fileID: 0}
+  - sprite: {fileID: 21300000, guid: 2000507997a6e704b90269319b23405b, type: 3}
+    position: {x: 0, y: -430}
+    zoomSprite: {fileID: 21300000, guid: 9bec3ac04b547a44d93dc352bc77e583, type: 3}
+  - sprite: {fileID: 21300000, guid: 91774b1df916aed4bac76bcbcf720f4f, type: 3}
+    position: {x: 300, y: -325}
+    zoomSprite: {fileID: 21300000, guid: eeea3e5fe67d54f4cace12b800ad5dbc, type: 3}
