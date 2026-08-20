@@ -36,6 +36,9 @@ public class CardDeck : MonoBehaviour
     [SerializeField] private string xRayOnText = "투시경 ON";
     [SerializeField] private string xRayOffText = "투시경 OFF";
     [SerializeField] private string xRayToggleSfxKey = "piiik";
+    [SerializeField, Min(0f)] private float xRayGraceDuration = 8f;
+    [SerializeField, Min(0.01f)] private float xRaySuspicionInterval = 5f;
+    [SerializeField, Min(0)] private int xRaySuspicionPerInterval = 2;
 
     [Header("사운드 키")]
     [SerializeField] private string cardDrawSfxKey = "cardDraw";
@@ -48,6 +51,8 @@ public class CardDeck : MonoBehaviour
     private bool isDrawing;
     private bool isResolving;
     private bool xRayActive;
+    private float xRayUsageTime;
+    private float xRayPenaltyTime;
 
     public IReadOnlyList<CardView> SelectedCards => selectionSlots
         .Where(slot => slot != null && slot.CurrentCard != null)
@@ -76,6 +81,11 @@ public class CardDeck : MonoBehaviour
         UpdateActionButtons();
     }
 
+    private void Update()
+    {
+        UpdateXRaySuspicion();
+    }
+
     private void OnDestroy()
     {
         if (nextButton != null) nextButton.onClick.RemoveListener(ConfirmSelection);
@@ -94,6 +104,7 @@ public class CardDeck : MonoBehaviour
         isDrawing = false;
         isResolving = false;
         cardsDrawn = false;
+        ResetXRaySuspicion();
         SetXRayMode(false);
 
         SetupSlots();
@@ -380,6 +391,43 @@ public class CardDeck : MonoBehaviour
         {
             xRayButtonLabel.text = xRayActive ? xRayOnText : xRayOffText;
         }
+    }
+
+    private void UpdateXRaySuspicion()
+    {
+        if (!xRayActive || isDrawing || isResolving) return;
+
+        float deltaTime = Mathf.Max(0f, Time.deltaTime);
+        if (deltaTime <= 0f) return;
+
+        float previousUsageTime = xRayUsageTime;
+        xRayUsageTime += deltaTime;
+
+        float graceDuration = Mathf.Max(0f, xRayGraceDuration);
+        float previousPenaltyTime = Mathf.Max(0f, previousUsageTime - graceDuration);
+        float currentPenaltyTime = Mathf.Max(0f, xRayUsageTime - graceDuration);
+        xRayPenaltyTime += currentPenaltyTime - previousPenaltyTime;
+
+        int suspicionPerInterval = Mathf.Max(0, xRaySuspicionPerInterval);
+        if (suspicionPerInterval <= 0) return;
+
+        float suspicionInterval = Mathf.Max(0.01f, xRaySuspicionInterval);
+        while (xRayPenaltyTime >= suspicionInterval)
+        {
+            xRayPenaltyTime -= suspicionInterval;
+
+            GameManager gameManager = GameManager.Instance;
+            if (gameManager == null) break;
+
+            gameManager.AddSuspicion(suspicionPerInterval);
+            if (gameManager.IsSuspicionThresholdReached) break;
+        }
+    }
+
+    private void ResetXRaySuspicion()
+    {
+        xRayUsageTime = 0f;
+        xRayPenaltyTime = 0f;
     }
 
     private bool CanUseXRayMode()
