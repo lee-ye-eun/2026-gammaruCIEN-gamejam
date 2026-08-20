@@ -253,7 +253,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -2102,6 +2102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2005642035}
+  - component: {fileID: 2005642036}
   m_Layer: 5
   m_Name: SuspictionGauge
   m_TagString: Untagged
@@ -2133,6 +2134,21 @@ RectTransform:
   m_AnchoredPosition: {x: -716, y: 508.09998}
   m_SizeDelta: {x: 480, y: 41.99997}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2005642036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2005642034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f678f1910c23eb4fa32b9f2ae1636be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SuspicionGaugeAnimator
+  fillImage: {fileID: 308712019}
+  suspicionUnitsPerSecond: 40
+  maxWidth: 387.0793
 --- !u!1001 &2213211618023774187
 PrefabInstance:
   m_ObjectHideFlags: 0
