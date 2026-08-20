@@ -58,6 +58,9 @@ public class GameFlowManager : MonoBehaviour
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private Result resultManager;
 
+    [Header("튜토리얼 (선택, 비워두면 무시됨)")]
+    [SerializeField] private TutorialPanel tutorialPanel;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -93,6 +96,9 @@ public class GameFlowManager : MonoBehaviour
 
         // 단서 찾기 상태일 때만 단서 이미지 호버/클릭이 가능하도록
         if (clueFinder != null) clueFinder.SetInteractable(newState == GameState.ClueFinding);
+
+        // 튜토리얼이 아직 살아있으면(첫 손님이 끝나기 전) 이 상태에 맞는 스텝을 보여준다.
+        if (tutorialPanel != null) tutorialPanel.NotifyStateChanged(newState);
 
         switch (newState)
         {
@@ -156,6 +162,9 @@ public class GameFlowManager : MonoBehaviour
             if (GameManager.Instance != null) GameManager.Instance.GoToStoryScene(GameManager.StoryTrigger.CustomersExhausted);
             return;
         }
+
+        // 첫 손님(customerIndex == 0)이 끝나고 다음 손님으로 넘어가는 시점 -> 튜토리얼 종료.
+        if (customerIndex > 0 && tutorialPanel != null) tutorialPanel.CompleteTutorial();
 
         currentCustomer = customers[customerIndex];
         questionLogs.Clear();

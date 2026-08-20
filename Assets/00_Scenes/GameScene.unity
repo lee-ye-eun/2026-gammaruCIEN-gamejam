@@ -1718,6 +1718,25 @@ MonoBehaviour:
   paperPanel: {fileID: 960162114}
   resultPanel: {fileID: 604251296}
   resultManager: {fileID: 604251300}
+  tutorialPanel: {fileID: 555000002}
+--- !u!1001 &555000001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 776894022}
+    m_Modifications: []
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2c61ab5c11a042d7b3f3d3dc38657221, type: 3}
+--- !u!114 &555000002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 100005, guid: 2c61ab5c11a042d7b3f3d3dc38657221, type: 3}
+  m_PrefabInstance: {fileID: 555000001}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1528409748
 GameObject:
   m_ObjectHideFlags: 0

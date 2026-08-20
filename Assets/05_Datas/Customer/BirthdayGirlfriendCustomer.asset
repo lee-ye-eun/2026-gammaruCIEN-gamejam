@@ -34,8 +34,8 @@ MonoBehaviour:
     position: {x: 0, y: 0}
     zoomSprite: {fileID: 21300000, guid: 9fe521739dd76134e931d70c63f8f686, type: 3}
   - sprite: {fileID: 21300000, guid: c248cbea6247e2a43a449d34f27a0626, type: 3}
-    position: {x: 0, y: -430}
+    position: {x: 0, y: -355}
     zoomSprite: {fileID: 21300000, guid: 9519d1dbb21e2a34486ff7d137348380, type: 3}
   - sprite: {fileID: 21300000, guid: e272d9d8d97304547a3e182553d7713d, type: 3}
-    position: {x: 300, y: -325}
+    position: {x: 255, y: -273}
     zoomSprite: {fileID: 21300000, guid: 3888616d73b473f4d9f95b8f3861505f, type: 3}
