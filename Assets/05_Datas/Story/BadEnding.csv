@@ -1,10 +1,12 @@
 speaker,image,bgm,effect,text
-손님,,BadEnding,,  저기요. 근데 아까부터 왜 자꾸 안경알 색이 바뀌는 거예요?
-손님,,,,질문은 또 왜 이렇게 많…
-손님,,,,아니 잠깐, 그 안경으로 지금 뭐 보고 있죠?
-주인공,,,,아앗…
-,,,fadeout,
-,,,fadein,
-주인공,,,,…망했네.
-,,stop,fadeout,
- ,,,,Try Again...
+손님,FailMan,BadEnding,,저기요. 근데 아까부터 왜 자꾸 안경알 색이 바뀌는 거예요? 질문은 또 왜 이렇게 많...
+손님,FailMan,,,,아니 잠깐, 그 안경으로 지금 뭐 보고 있죠?
+주인공,FailMan,,,아앗...
+,Black,,fadeout,
+,Phone,,fadein,
+,Phone,,,blind_faith13 : 용하다고 해서 갔는데 순 사기꾼임
+,Phone,,,tarot_lover66 : 타로 보러 갔다가 취조당하고 옴
+주인공,Fail,,,...망했네.
+,Black,,fadeout,
+,,stop,,
+,Black,,fadein,Try Again
