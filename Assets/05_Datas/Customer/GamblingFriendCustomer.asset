@@ -23,6 +23,9 @@ MonoBehaviour:
     \uB3C8\uC744 \uC8FC\uAE30 \uC804\uC5D0 \uB3C8\uC774 \uD544\uC694\uD55C \uC774\uC720\uB97C
     \uCD94\uAD81\uD574 \uC194\uC9C1\uD55C \uB2F5\uC744 \uBC1B\uC544\uB0B4\uC57C \uD55C\uB2E4."
   portrait: {fileID: 21300000, guid: 243cd257d1d64964eaecd6159dd2334b, type: 3}
+  expression1: {fileID: 21300000, guid: 93eb5c537e055dd43a48e214a385fffa, type: 3}
+  expression2: {fileID: 21300000, guid: f4e738fa05e383d48bf1e8b317665671, type: 3}
+  expression3: {fileID: 21300000, guid: 243cd257d1d64964eaecd6159dd2334b, type: 3}
   background: {fileID: 2800000, guid: 55a28dbc309e841b78479f0d7aeccb0f, type: 3}
   dialogueCsv: {fileID: 4900000, guid: 00960361acea2a743a7782af01c030f8, type: 3}
   causeCard: {fileID: 11400000, guid: db0fc53dd478a4f5ab0c23c6b314ad45, type: 2}
