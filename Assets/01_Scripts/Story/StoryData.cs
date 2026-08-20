@@ -6,6 +6,7 @@ public class StoryImageEntry
 {
     public string key;
     public Sprite sprite;
+    public Texture2D texture;
 }
 
 // 컷(행)마다 대사/이미지 키/BGM 키를 담은 CSV 하나로 스토리를 정의한다.
@@ -25,7 +26,7 @@ public class StoryData : ScriptableObject
     public string nextSceneName;
 
     private List<StoryLine> cachedLines;
-    private Dictionary<string, Sprite> imageLookup;
+    private Dictionary<string, Texture2D> imageLookup;
 
     // CSV를 최초 접근 시 한 번만 파싱해서 캐시
     private List<StoryLine> Lines
@@ -37,17 +38,22 @@ public class StoryData : ScriptableObject
         }
     }
 
-    private Dictionary<string, Sprite> ImageLookup
+    private Dictionary<string, Texture2D> ImageLookup
     {
         get
         {
             if (imageLookup == null)
             {
-                imageLookup = new Dictionary<string, Sprite>();
+                imageLookup = new Dictionary<string, Texture2D>();
                 foreach (var entry in imageEntries)
                 {
-                    if (entry == null || string.IsNullOrEmpty(entry.key) || entry.sprite == null) continue;
-                    imageLookup[entry.key] = entry.sprite;
+                    if (entry == null || string.IsNullOrEmpty(entry.key)) continue;
+
+                    Texture2D texture = entry.texture;
+                    if (texture == null && entry.sprite != null) texture = entry.sprite.texture;
+                    if (texture == null) continue;
+
+                    imageLookup[entry.key] = texture;
                 }
             }
             return imageLookup;
@@ -63,9 +69,9 @@ public class StoryData : ScriptableObject
         return lines[index];
     }
 
-    public Sprite GetImage(string key)
+    public Texture2D GetImage(string key)
     {
         if (string.IsNullOrEmpty(key)) return null;
-        return ImageLookup.TryGetValue(key, out Sprite sprite) ? sprite : null;
+        return ImageLookup.TryGetValue(key, out Texture2D texture) ? texture : null;
     }
 }
