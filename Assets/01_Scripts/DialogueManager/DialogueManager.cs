@@ -32,7 +32,7 @@ public class DialogueManager : MonoBehaviour
     private Mode mode;
     private bool isTouchActive;
     private CustomerData questioningCustomer;
-    private readonly Queue<(string text, string speaker)> pendingLines = new Queue<(string text, string speaker)>();
+    private readonly Queue<(string text, string speaker, System.Action onShow)> pendingLines = new Queue<(string text, string speaker, System.Action onShow)>();
     private System.Action onSequenceComplete;
 
     private void Awake()
@@ -83,9 +83,9 @@ public class DialogueManager : MonoBehaviour
     }
 
     // 여러 대사를 터치마다 한 줄씩 순서대로 보여준다 (예: 선택한 카드 3장의 해석(주인공) -> 손님 반응).
-    // 줄마다 화자를 따로 지정한다. 빈 텍스트 줄은 건너뛰고, 다 보여준 뒤 onComplete을 호출한다
-    // (lines가 전부 비어있으면 바로 호출).
-    public void ShowDialogueSequence(IEnumerable<(string text, string speaker)> lines, System.Action onComplete)
+    // 줄마다 화자와, 그 줄이 화면에 표시되는 순간 실행할 부수효과(onShow, 예: 표정 변경)를 따로 지정할 수 있다.
+    // 빈 텍스트 줄은 건너뛰고(onShow도 실행 안 됨), 다 보여준 뒤 onComplete을 호출한다 (lines가 전부 비어있으면 바로 호출).
+    public void ShowDialogueSequence(IEnumerable<(string text, string speaker, System.Action onShow)> lines, System.Action onComplete)
     {
         pendingLines.Clear();
         if (lines != null)
@@ -110,8 +110,9 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        (string text, string speaker) line = pendingLines.Dequeue();
+        (string text, string speaker, System.Action onShow) line = pendingLines.Dequeue();
         ShowDialogueAs(line.text, line.speaker);
+        line.onShow?.Invoke();
     }
 
     // 질문 차례 시작: 질문창부터 보여준다

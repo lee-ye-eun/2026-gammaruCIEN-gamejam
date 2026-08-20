@@ -29,12 +29,23 @@ public class CustomerView : MonoBehaviour
 
     private void Refresh()
     {
-        if (portraitImage != null)
-        {
-            portraitImage.sprite = data.portrait;
-            portraitImage.SetNativeSize(); // 스프라이트의 원본 픽셀 크기에 맞춰 RectTransform 크기 자동 조정
-        }
+        SetPortraitSprite(data.portrait);
         RefreshClueVisuals();
+    }
+
+    // 카드 결과 연출 중 표정을 임시로 바꾼다 (다음 손님으로 넘어가 SetData가 다시 호출되면 기본 portrait로 되돌아감).
+    public void SetExpression(Sprite expressionSprite)
+    {
+        if (expressionSprite == null) return;
+        SetPortraitSprite(expressionSprite);
+    }
+
+    private void SetPortraitSprite(Sprite sprite)
+    {
+        if (portraitImage == null) return;
+
+        portraitImage.sprite = sprite;
+        portraitImage.SetNativeSize(); // 스프라이트의 원본 픽셀 크기에 맞춰 RectTransform 크기 자동 조정
     }
 
     private void RefreshClueVisuals()
