@@ -216,8 +216,8 @@ public class GameFlowManager : MonoBehaviour
 
         string reaction = currentCustomer != null ? currentCustomer.GetReaction(matchCount) : string.Empty;
 
-        List<string> lines = GetSelectedCardMeaningLines();
-        lines.Add(reaction);
+        List<(string text, string speaker)> lines = GetSelectedCardMeaningLines();
+        lines.Add((reaction, DialogueManager.CustomerSpeakerLabel));
 
         if (dialogueManager != null)
         {
@@ -225,11 +225,11 @@ public class GameFlowManager : MonoBehaviour
         }
     }
 
-    // 선택된 3장의 카드를 슬롯 순서(원인/현재/조언)대로, 그 위치에 해당하는 해석 대사만 뽑아 모은다.
+    // 선택된 3장의 카드를 슬롯 순서(원인/현재/조언)대로, 그 위치에 해당하는 해석 대사만 뽑아 모은다. 화자는 주인공.
     // 카드에 그 위치의 해석이 비어 있으면 건너뛴다.
-    private List<string> GetSelectedCardMeaningLines()
+    private List<(string text, string speaker)> GetSelectedCardMeaningLines()
     {
-        var lines = new List<string>();
+        var lines = new List<(string text, string speaker)>();
         if (cardDeck == null) return lines;
 
         IReadOnlyList<CardView> selected = cardDeck.SelectedCards;
@@ -239,11 +239,11 @@ public class GameFlowManager : MonoBehaviour
         return lines;
     }
 
-    private static void AddMeaningLine(List<string> lines, IReadOnlyList<CardView> selected, int index, System.Func<CardData, string> pickMeaning)
+    private static void AddMeaningLine(List<(string text, string speaker)> lines, IReadOnlyList<CardView> selected, int index, System.Func<CardData, string> pickMeaning)
     {
         CardData data = index < selected.Count && selected[index] != null ? selected[index].Data : null;
         string line = data != null ? pickMeaning(data) : null;
-        if (!string.IsNullOrWhiteSpace(line)) lines.Add(line);
+        if (!string.IsNullOrWhiteSpace(line)) lines.Add((line, DialogueManager.ProtagonistSpeakerLabel));
     }
 
     private int GetCardResultSuspicionDelta(int wrongCount)

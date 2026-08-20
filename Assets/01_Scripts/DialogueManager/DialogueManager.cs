@@ -14,9 +14,13 @@ public class DialogueManager : MonoBehaviour
     // 지금 대사창(일반 텍스트)을 보여주는 중인지, 질문 선택 중인지, 선택한 질문의 답을 보여주는 중인지
     private enum Mode { Normal, SelectingQuestion, ShowingAnswer }
 
+    public const string CustomerSpeakerLabel = "손님";
+    public const string ProtagonistSpeakerLabel = "주인공";
+
     [Header("대사창 (다이얼로그 패널의 자식)")]
     [SerializeField] private GameObject dialogueBox;
     [SerializeField] private TMP_Text dialogueText;
+    [SerializeField] private TMP_Text speakerText; // 화자 이름란 (비워두면 무시됨)
 
     [Header("질문창 (다이얼로그 패널의 자식, 질문 차례에만 사용)")]
     [SerializeField] private GameObject questionBox;
@@ -28,7 +32,7 @@ public class DialogueManager : MonoBehaviour
     private Mode mode;
     private bool isTouchActive;
     private CustomerData questioningCustomer;
-    private readonly Queue<string> pendingLines = new Queue<string>();
+    private readonly Queue<(string text, string speaker)> pendingLines = new Queue<(string text, string speaker)>();
     private System.Action onSequenceComplete;
 
     private void Awake()
@@ -57,12 +61,18 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    // 임의의 대사 한 줄을 대사창에 출력한다 (손님 관찰 대사, 카드 결과 대사 등 공용)
+    // 임의의 대사 한 줄을 대사창에 출력한다 (손님 관찰 대사, 카드 결과 대사 등 공용). 화자는 손님으로 표시.
     public void ShowDialogue(string text)
+    {
+        ShowDialogueAs(text, CustomerSpeakerLabel);
+    }
+
+    private void ShowDialogueAs(string text, string speaker)
     {
         mode = Mode.Normal;
         SetBoxes(dialogueOn: true, questionOn: false);
         if (dialogueText != null) dialogueText.text = text;
+        if (speakerText != null) speakerText.text = speaker;
         isTouchActive = true;
     }
 
@@ -72,16 +82,17 @@ public class DialogueManager : MonoBehaviour
         ShowDialogue(customer != null ? customer.Dialogue.worryText : string.Empty);
     }
 
-    // 여러 대사를 터치마다 한 줄씩 순서대로 보여준다 (예: 선택한 카드 3장의 해석 -> 손님 반응).
-    // 빈 줄은 건너뛰고, 다 보여준 뒤 onComplete을 호출한다 (lines가 전부 비어있으면 바로 호출).
-    public void ShowDialogueSequence(IEnumerable<string> lines, System.Action onComplete)
+    // 여러 대사를 터치마다 한 줄씩 순서대로 보여준다 (예: 선택한 카드 3장의 해석(주인공) -> 손님 반응).
+    // 줄마다 화자를 따로 지정한다. 빈 텍스트 줄은 건너뛰고, 다 보여준 뒤 onComplete을 호출한다
+    // (lines가 전부 비어있으면 바로 호출).
+    public void ShowDialogueSequence(IEnumerable<(string text, string speaker)> lines, System.Action onComplete)
     {
         pendingLines.Clear();
         if (lines != null)
         {
             foreach (var line in lines)
             {
-                if (!string.IsNullOrWhiteSpace(line)) pendingLines.Enqueue(line);
+                if (!string.IsNullOrWhiteSpace(line.text)) pendingLines.Enqueue(line);
             }
         }
 
@@ -99,7 +110,8 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        ShowDialogue(pendingLines.Dequeue());
+        (string text, string speaker) line = pendingLines.Dequeue();
+        ShowDialogueAs(line.text, line.speaker);
     }
 
     // 질문 차례 시작: 질문창부터 보여준다
@@ -148,6 +160,7 @@ public class DialogueManager : MonoBehaviour
         mode = Mode.ShowingAnswer;
         SetBoxes(dialogueOn: true, questionOn: false);
         if (dialogueText != null) dialogueText.text = questions[index].clueText;
+        if (speakerText != null) speakerText.text = CustomerSpeakerLabel;
         isTouchActive = true; // 터치하면 다시 질문창으로
 
         if (GameFlowManager.Instance != null)
